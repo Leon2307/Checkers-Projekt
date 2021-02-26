@@ -1,5 +1,7 @@
+import pygame
 import feld
 import gui
+import zuege
 
 SPIELFELDGROESSE = 8
 
@@ -24,11 +26,16 @@ def startFeld():
 
     return spielfeld
 
+def wechselSpieler(alterSpieler):
+    return not alterSpieler
+
 def main():
     feld = startFeld()
 
     gewonnen = False
     momSpieler = True #Momentaner Spieler => spieler = True; computer = False
+
+    gui.initWindow()
 
     #Dauerschleife
     while True:
@@ -36,13 +43,13 @@ def main():
         #Solange das Spiel läuft
         while not gewonnen:
             if momSpieler:
-                x, y = spielerZug()
+                x, y = zuege.spielerZug(feld)
                 feld[y][x].makePlayer(True)
             else:
-                x, y = computerZug()
+                x, y = zuege.computerZug(feld)
                 feld[y][x].makeComputer(True)
 
-            gui.draw()
+            gui.draw(feld, SPIELFELDGROESSE)
 
         #Wenn das Spiel beendet ist
         while gewonnen:
