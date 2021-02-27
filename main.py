@@ -1,4 +1,3 @@
-import pygame
 import feld
 import gui
 import zuege
@@ -15,14 +14,14 @@ def startFeld():
             #Farbe des Feldes
             if (y + x) % 2 == 0:
                 spielfeld[y][x].makeBlack(True)
+
+                #Steine belegung
+                if y < 3:
+                    spielfeld[y][x].makeComputer(True)
+                elif y > 4:
+                    spielfeld[y][x].makePlayer(True)
             else:
                 spielfeld[y][x].makeWhite(True)
-
-            #Steine belegung
-            if y < 3 and spielfeld[y][x].isBlack():
-                spielfeld[y][x].makeComputer(True)
-            elif y > 4 and spielfeld[y][x].isBlack():
-                spielfeld[y][x].makePlayer(True)
 
     return spielfeld
 
@@ -35,8 +34,6 @@ def main():
     gewonnen = False
     momSpieler = True #Momentaner Spieler => spieler = True; computer = False
 
-    gui.initWindow()
-
     #Dauerschleife
     while True:
 
@@ -44,10 +41,10 @@ def main():
         while not gewonnen:
             if momSpieler:
                 x, y = zuege.spielerZug(feld)
-                feld[y][x].makePlayer(True)
+                #feld[y][x].makePlayer(True)
             else:
                 x, y = zuege.computerZug(feld)
-                feld[y][x].makeComputer(True)
+                #feld[y][x].makeComputer(True)
 
             gui.draw(feld, SPIELFELDGROESSE)
 
