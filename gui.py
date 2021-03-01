@@ -25,15 +25,10 @@ pygame.init()
 screen = pygame.display.set_mode((WEITE, HOEHE))
 pygame.display.set_caption("Checkers") 
 
-#Kontrolliert Abbruchbedingung und Events
-def events(feldgroesse, feld):
+def mausGedrueckt(feld, feldgroesse):
     global letzteMarkiert
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        
+    #mausGedrueckt(feld, feldgroesse)
     if pygame.mouse.get_pressed()[0]:
         y, x = getMausFeld(feldgroesse)
 
@@ -50,6 +45,22 @@ def events(feldgroesse, feld):
             for zug in feld[y][x].getZüge():
                 zug.makeNachbar(True)
                 letzteNachbarn.append(zug)
+
+        #Ist Geklicktes Feld Nachbar?
+        elif feld[y][x].isNachbar():
+            letzteMarkiert.makePlayer(False)
+            letzteMarkiert.makeClicked(False)
+            feld[y][x].makePlayer(True)
+            for n in letzteNachbarn:
+                    n.makeNachbar(False)
+
+#Kontrolliert Abbruchbedingung und Events
+def events(feldgroesse, feld):
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
 #Auswertung der Mausposition
 def getMausFeld(feldgroesse):

@@ -41,11 +41,9 @@ def main():
         while not gewonnen:
             if momSpieler:
                 zuege.moeglicheZuege(feld, momSpieler)
-                y, x = zuege.spielerZug(feld)
-                #feld[y][x].makePlayer(True)
+                zuege.spielerZug(feld,SPIELFELDGROESSE)
             else:
-                y, x = zuege.computerZug(feld)
-                #feld[y][x].makeComputer(True)
+                zuege.computerZug(feld)
 
             gui.draw(feld, SPIELFELDGROESSE)
 
