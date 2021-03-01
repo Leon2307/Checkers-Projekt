@@ -40,10 +40,10 @@ def main():
         #Solange das Spiel läuft
         while not gewonnen:
             if momSpieler:
-                x, y = zuege.spielerZug(feld)
+                y, x = zuege.spielerZug(feld)
                 #feld[y][x].makePlayer(True)
             else:
-                x, y = zuege.computerZug(feld)
+                y, x = zuege.computerZug(feld)
                 #feld[y][x].makeComputer(True)
 
             gui.draw(feld, SPIELFELDGROESSE)

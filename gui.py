@@ -46,6 +46,11 @@ def draw(feld, feldgroesse):
                 spielfigur = figurGruen
                 screen.blit(spielfigur,(x*feldWeite, y*feldHoehe))
 
+            #Zug möglich
+            if len(feld[y][x].getZüge()) > 0:
+                pygame.draw.rect(screen,(100,100,100),(x*feldWeite, y*feldHoehe, feldWeite, feldHoehe))
+
+
     pygame.display.update()
 
     quit()
