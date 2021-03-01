@@ -1,12 +1,11 @@
 import pygame
 
 def moeglicheZuege(feld, spieler):
-    pass
-
-def spielerZug(feld):
     for y in range(len(feld)):
         for x in range(len(feld)):
-            feld[y][x].zügeBerechnen(feld, True, y, x)
+            feld[y][x].zügeBerechnen(feld, spieler, y, x)
+
+def spielerZug(feld):
     return None, None
 
 def computerZug(feld):

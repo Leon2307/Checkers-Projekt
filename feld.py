@@ -15,6 +15,7 @@ class Feld:
         self.computer = False
         self.dame = False
         self.clicked = False
+        self.Nachbar = False
 
     #Methoden zur Abfrage des Status
     def isWhite(self):
@@ -35,6 +36,9 @@ class Feld:
     def isClicked(self):
         return self.clicked
 
+    def isNachbar(self):
+        return self.Nachbar
+
     #Methoden zum setzen eines Status
     def makeWhite(self, bool):
         self.white = bool
@@ -54,13 +58,18 @@ class Feld:
     def makeClicked(self, bool):
         self.clicked = bool
 
+    def makeNachbar(self,bool):
+        self.Nachbar = bool
+
     #Mögliche Züge berechnen
     def getZüge(self):
         return self.moeglicheZuege
 
     def zügeBerechnen(self, feld, player, y, x):
+
         self.moeglicheZuege = []
-        if self.isPlayer and player:
+
+        if self.isPlayer() and player:
             #Für normale Steine
             if not self.isDame():
                 #Alle Möglichkeiten durchgehen
@@ -71,6 +80,7 @@ class Feld:
                     #Auf leere des nächsten Feldes prüfen
                     if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
                         self.moeglicheZuege.append(feld[y+j][x+i])
+
             elif self.isDame():
                 pass
 

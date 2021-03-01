@@ -40,6 +40,7 @@ def main():
         #Solange das Spiel läuft
         while not gewonnen:
             if momSpieler:
+                zuege.moeglicheZuege(feld, momSpieler)
                 y, x = zuege.spielerZug(feld)
                 #feld[y][x].makePlayer(True)
             else:
