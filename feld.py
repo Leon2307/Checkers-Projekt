@@ -6,7 +6,7 @@ class Feld:
 
     moeglicheZuege = []
     dZügePlayer = [[-1,1],[-1,-1]]
-    dZügeComputer = {"links": (1,-1), "rechts":(1,1)}
+    dZügeComputer = [[1,-1],[1,1]]
 
     def __init__(self):
         self.white = False
@@ -84,6 +84,18 @@ class Feld:
             elif self.isDame():
                 pass
 
-        elif self.isComputer and not player:
-            pass
+        elif self.isComputer() and not player:
+            #Für normale Steine
+            if not self.isDame():
+                #Alle Möglichkeiten durchgehen
+                for j,i in self.dZügeComputer:
+                    #Auf Existenz prüfen
+                    if y+j > 7 or x+i < 0 or x+i > 7:
+                        continue
+                    #Auf leere des nächsten Feldes prüfen
+                    if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
+                        self.moeglicheZuege.append(feld[y+j][x+i])
+
+            elif self.isDame():
+                pass
     
