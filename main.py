@@ -6,10 +6,10 @@ import zuege
 class Hauptklasse:
 
     SPIELFELDGROESSE = 8
-    #momSpieler = True #Momentaner Spieler => spieler = True; computer = False
+    # momSpieler = True #Momentaner Spieler => spieler = True; computer = False
 
     def __init__(self):
-        self.momSpieler = True #Momentaner Spieler => spieler = True; computer = False
+        self.momSpieler = True  # Momentaner Spieler => spieler = True; computer = False
 
     def startFeld(self):
         spielfeld = []
@@ -18,11 +18,11 @@ class Hauptklasse:
             for x in range(self.SPIELFELDGROESSE):
                 spielfeld[y].append(feld.Feld())
 
-                #Farbe des Feldes
+                # Farbe des Feldes
                 if (y + x) % 2 == 0:
                     spielfeld[y][x].makeBlack(True)
 
-                    #Steine belegung
+                    # Steine belegung
                     if y < 3:
                         spielfeld[y][x].makeComputer(True)
                     elif y > 4:
@@ -39,22 +39,24 @@ class Hauptklasse:
         feld = self.startFeld()
 
         gewonnen = False
+        feld[5][5].makeDame(True)
 
-        #Dauerschleife
+        # Dauerschleife
         while True:
-            #Solange das Spiel läuft
+            # Solange das Spiel läuft
             while not gewonnen:
                 zuege.moeglicheZuege(feld, self.momSpieler)
                 if self.momSpieler:
-                    zuege.spielerZug(feld,self.SPIELFELDGROESSE, h)
+                    zuege.spielerZug(feld, self.SPIELFELDGROESSE, h)
                 else:
                     zuege.computerZug(feld, self.SPIELFELDGROESSE, h)
 
                 gui.draw(feld, self.SPIELFELDGROESSE)
 
-            #Wenn das Spiel beendet ist
+            # Wenn das Spiel beendet ist
             while gewonnen:
                 return
+
 
 if __name__ == "__main__":
     h = Hauptklasse()
