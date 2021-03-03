@@ -1,5 +1,6 @@
 import pygame
 import sys
+import zuege
 
 
 WEITE = 1000
@@ -9,8 +10,6 @@ BLACK = (32,32,32)
 WHITE = (255,255,255)
 
 GRAU = (100,100,100)
-letzteMarkiert = None
-letzteNachbarn = []
 
 LINIENFARBE = (235,171,52)
 LINIENDICKE = 5
@@ -34,59 +33,8 @@ def mausGedrueckt(feld, feldgroesse, spieler, h):
     if pygame.mouse.get_pressed()[0]:
         y, x = getMausFeld(feldgroesse)
 
-        #Spieler
-        if spieler:
-            #Geklicktes Feld markieren
-            if feld[y][x].isPlayer() and len(feld[y][x].getZüge()) > 0:
-                if letzteMarkiert != None:
-                    letzteMarkiert.makeClicked(False)
-                    for n in letzteNachbarn:
-                        n.makeNachbar(False)
-                letzteMarkiert = feld[y][x]
-                feld[y][x].makeClicked(True)
+        zuege.zugAusführen(feld, spieler, y, x , h)
 
-                #Nachbarn markieren
-                for zug in feld[y][x].getZüge():
-                    zug.makeNachbar(True)
-                    letzteNachbarn.append(zug)
-
-            #Ist Geklicktes Feld Nachbar?
-            elif feld[y][x].isNachbar():
-                letzteMarkiert.makePlayer(False)
-                letzteMarkiert.makeClicked(False)
-                feld[y][x].makePlayer(True)
-                for n in letzteNachbarn:
-                    n.makeNachbar(False)
-                h.wechselSpieler()
-                letzteMarkiert = None
-                letzteNachbarn = []
-
-        #Computer
-        else:
-            #Geklicktes Feld markieren
-            if feld[y][x].isComputer() and len(feld[y][x].getZüge()) > 0:
-                if letzteMarkiert != None:
-                    letzteMarkiert.makeClicked(False)
-                    for n in letzteNachbarn:
-                        n.makeNachbar(False)
-                letzteMarkiert = feld[y][x]
-                feld[y][x].makeClicked(True)
-
-                #Nachbarn markieren
-                for zug in feld[y][x].getZüge():
-                    zug.makeNachbar(True)
-                    letzteNachbarn.append(zug)
-
-            #Ist Geklicktes Feld Nachbar?
-            elif feld[y][x].isNachbar():
-                letzteMarkiert.makeComputer(False)
-                letzteMarkiert.makeClicked(False)
-                feld[y][x].makeComputer(True)
-                for n in letzteNachbarn:
-                    n.makeNachbar(False)
-                h.wechselSpieler()
-                letzteMarkiert = None
-                letzteNachbarn = []
 
 #Kontrolliert Abbruchbedingung und Events
 def events(feldgroesse, feld):

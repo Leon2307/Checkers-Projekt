@@ -74,12 +74,17 @@ class Feld:
             if not self.isDame():
                 #Alle Möglichkeiten durchgehen
                 for j,i in self.dZügePlayer:
+                    j2 = j*2
+                    i2 = i*2
                     #Auf Existenz prüfen
-                    if y+j < 0 or x+i < 0 or x+i > 7:
-                        continue
-                    #Auf leere des nächsten Feldes prüfen
-                    if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                        self.moeglicheZuege.append(feld[y+j][x+i])
+                    if not (y+j < 0 or x+i < 0 or x+i > 7):
+                        #Auf leere des nächsten Feldes prüfen
+                        if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
+                            self.moeglicheZuege.append((feld[y+j][x+i],None))
+                    #Auf Gegner prüfen und leere des dahinter liegenden Feldes
+                    if not(y+j2 < 0 or x+i2 < 0 or x+i2 > 7):
+                        if feld[y+j][x+i].isComputer() and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
+                            self.moeglicheZuege.append((feld[y+j2][x+i2],feld[y+j][x+i]))
 
             elif self.isDame():
                 pass
@@ -89,13 +94,17 @@ class Feld:
             if not self.isDame():
                 #Alle Möglichkeiten durchgehen
                 for j,i in self.dZügeComputer:
+                    j2 = j*2
+                    i2 = i*2
                     #Auf Existenz prüfen
-                    if y+j > 7 or x+i < 0 or x+i > 7:
-                        continue
-                    #Auf leere des nächsten Feldes prüfen
-                    if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                        self.moeglicheZuege.append(feld[y+j][x+i])
-
+                    if not(y+j > 7 or x+i < 0 or x+i > 7):
+                        #Auf leere des nächsten Feldes prüfen
+                        if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
+                            self.moeglicheZuege.append((feld[y+j][x+i],None))
+                    #Auf Gegner prüfen und leere des dahinter liegenden Feldes
+                    if not(y+j2 > 7 or x+i2 < 0 or x+i2 > 7):
+                        if feld[y+j][x+i].isPlayer() and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
+                            self.moeglicheZuege.append((feld[y+j2][x+i2],feld[y+j][x+i]))
             elif self.isDame():
                 pass
     
