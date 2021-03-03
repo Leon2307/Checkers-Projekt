@@ -4,11 +4,62 @@ import gui
 letzteMarkiert = None
 letzteNachbarn = []
 
+dZügePlayer = [[-1, 1], [-1, -1]]
+dZügeComputer = [[1, -1], [1, 1]]
+dZügeDame = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
+
 
 def moeglicheZuege(feld, spieler):
     for y in range(len(feld)):
         for x in range(len(feld)):
             feld[y][x].zügeBerechnen(feld, spieler, y, x)
+
+
+def zugzwang(feld, spieler, y, x, übersprungenerStein, isDame):
+
+    zwangZüge = []
+
+    if not isDame:
+        deltaZüge = dZügePlayer if spieler else dZügeComputer
+
+        # Alle Möglichkeiten durchgehen
+        for j, i in deltaZüge:
+            j2 = j*2
+            i2 = i*2
+
+            # Auf Gegner prüfen und leere des dahinter liegenden Feldes
+            if not(y+j2 < 0 or y+j2 > 7 or x+i2 < 0 or x+i2 > 7):
+                if (feld[y+j][x+i].isComputer() and spieler or feld[y+j][x+i].isPlayer() and not spieler) and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
+                    zwangZüge.append(
+                        (feld[y+j2][x+i2], (feld[y+j][x+i], übersprungenerStein)))
+
+    else:
+
+        # Alle Möglichkeiten durchgehen
+        for j, i in dZügeDame:
+            speicherJ = j
+            speicherI = i
+            print('test')
+            while y+j < 8 and y+j >= 0 and x+i < 8 and x+i >= 0:
+                # Auf leere des Feldes prüfen
+                if feld[y+j][x+i].isPlayer() and spieler or feld[y+j][x+i].isComputer() and not spieler:
+                    break
+                elif feld[y+j][x+i].isComputer() and spieler or feld[y+j][x+i].isPlayer() and not spieler:
+                    print('hier')
+                    # Wenn das Feld besetzt ist prüfen ob das darauf Folgende frei ist
+                    if not(y+j+speicherJ < 8 and y+j+speicherJ >= 0 and x+i+speicherI < 8 and x+i+speicherI >= 0):
+                        break
+                    if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
+                        print('hallo')
+                        zwangZüge.append(
+                            (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], übersprungenerStein)))
+                    break
+
+                # j und i erhöhen
+                j = j+speicherJ
+                i = i+speicherI
+
+    return zwangZüge
 
 
 def zugAusführen(feld, spieler, y, x, h):
@@ -58,9 +109,11 @@ def zugAusführen(feld, spieler, y, x, h):
 
         # rauswerfen
         if letzteMarkiert.getZüge()[nachbarIndex][1] != None:
-            letzteMarkiert.getZüge()[nachbarIndex][1].makePlayer(False)
-            letzteMarkiert.getZüge()[nachbarIndex][1].makeComputer(False)
-            letzteMarkiert.getZüge()[nachbarIndex][1].makeDame(False)
+            for letzteZüge in letzteMarkiert.getZüge()[nachbarIndex][1]:
+                if letzteZüge != None:
+                    letzteZüge.makePlayer(False)
+                    letzteZüge.makeComputer(False)
+                    letzteZüge.makeDame(False)
 
         letzteMarkiert = None
         letzteNachbarn = []

@@ -39,7 +39,6 @@ class Hauptklasse:
         feld = self.startFeld()
 
         gewonnen = False
-        feld[5][5].makeDame(True)
 
         # Dauerschleife
         while True:

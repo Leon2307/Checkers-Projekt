@@ -1,9 +1,11 @@
 
 from zuege import moeglicheZuege
+import zuege
 
 
 class Feld:
 
+    # [Feld zum hinbewegen, (Felder die rausgeworfen werden)]
     moeglicheZuege = []
     dZügePlayer = [[-1, 1], [-1, -1]]
     dZügeComputer = [[1, -1], [1, 1]]
@@ -85,13 +87,20 @@ class Feld:
 
                         # Auf leere des nächsten Feldes prüfen
                         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append((feld[y+j][x+i], None))
+                            self.moeglicheZuege.append(
+                                (feld[y+j][x+i], (None, None)))
 
                     # Auf Gegner prüfen und leere des dahinter liegenden Feldes
                     if not(y+j2 < 0 or x+i2 < 0 or x+i2 > 7):
                         if feld[y+j][x+i].isComputer() and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
+
+                            # Nach Zwangzug suchen
+                            zwangZüge = zuege.zugzwang(
+                                feld, player, y+j2, x+i2, feld[y+j][x+i], False)
+                            for zug in zwangZüge:
+                                self.moeglicheZuege.append(zug)
                             self.moeglicheZuege.append(
-                                (feld[y+j2][x+i2], feld[y+j][x+i]))
+                                (feld[y+j2][x+i2], (feld[y+j][x+i], None)))
 
             elif self.isDame():
 
@@ -99,9 +108,8 @@ class Feld:
                 for j, i in self.dZügeDame:
                     speicherJ = j
                     speicherI = i
-                    print('keine Schleife')
+
                     while y+j < 8 and y+j >= 0 and x+i < 8 and x+i >= 0:
-                        print('schleife')
 
                         # Auf leere des Feldes prüfen
                         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
@@ -114,8 +122,13 @@ class Feld:
                             if not(y+j+speicherJ < 8 and y+j+speicherJ >= 0 and x+i+speicherI < 8 and x+i+speicherI >= 0):
                                 break
                             if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
+                                # Nach Zwangzug suchen
+                                zwangZüge = zuege.zugzwang(
+                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True)
+                                for zug in zwangZüge:
+                                    self.moeglicheZuege.append(zug)
                                 self.moeglicheZuege.append(
-                                    (feld[y+j+speicherJ][x+i+speicherI], feld[y+j][x+i]))
+                                    (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None)))
                             break
 
                         # j und i erhöhen
@@ -138,13 +151,20 @@ class Feld:
 
                         # Auf leere des nächsten Feldes prüfen
                         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append((feld[y+j][x+i], None))
+                            self.moeglicheZuege.append(
+                                (feld[y+j][x+i], (None, None)))
 
                     # Auf Gegner prüfen und leere des dahinter liegenden Feldes
                     if not(y+j2 > 7 or x+i2 < 0 or x+i2 > 7):
                         if feld[y+j][x+i].isPlayer() and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
+
+                            # Nach Zwangzug suchen
+                            zwangZüge = zuege.zugzwang(
+                                feld, player, y+j2, x+i2, feld[y+j][x+i], False)
+                            for zug in zwangZüge:
+                                self.moeglicheZuege.append(zug)
                             self.moeglicheZuege.append(
-                                (feld[y+j2][x+i2], feld[y+j][x+i]))
+                                (feld[y+j2][x+i2], (feld[y+j][x+i], None)))
             elif self.isDame():
 
                 # Solange durchgehen, bis ein Stein oder der Rand kommt
@@ -164,8 +184,13 @@ class Feld:
                             if not(y+j+speicherJ < 8 and y+j+speicherJ >= 0 and x+i+speicherI < 8 and x+i+speicherI >= 0):
                                 break
                             if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
+                                # Nach Zwangzug suchen
+                                zwangZüge = zuege.zugzwang(
+                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True)
+                                for zug in zwangZüge:
+                                    self.moeglicheZuege.append(zug)
                                 self.moeglicheZuege.append(
-                                    (feld[y+j+speicherJ][x+i+speicherI], feld[y+j][x+i]))
+                                    (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None)))
                             break
 
                         # j und i erhöhen
