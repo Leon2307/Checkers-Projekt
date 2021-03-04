@@ -1,24 +1,26 @@
 
-from zuege import moeglicheZuege
 import zuege
 
 
 class Feld:
 
-    # [Feld zum hinbewegen, (Felder die rausgeworfen werden)]
+    # [Feld zum hinbewegen, (Felder die rausgeworfen werden), Eckfeld über das gegangen wird]
     moeglicheZuege = []
+
     dZügePlayer = [[-1, 1], [-1, -1]]
     dZügeComputer = [[1, -1], [1, 1]]
     dZügeDame = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
 
-    def __init__(self):
+    def __init__(self, y, x):
+        self.Y = y
+        self.X = x
         self.white = False
         self.black = False
         self.player = False
         self.computer = False
         self.dame = False
         self.clicked = False
-        self.Nachbar = False
+        self.moeglicherZug = False
 
     # Methoden zur Abfrage des Status
     def isWhite(self):
@@ -39,8 +41,18 @@ class Feld:
     def isClicked(self):
         return self.clicked
 
-    def isNachbar(self):
-        return self.Nachbar
+    def isMoeglicherZug(self):
+        return self.moeglicherZug
+
+    def getPunkte(self, index):
+
+        # Wenn ein Eckpunkt enthalten ist werden 3, ansonsten 2 Punkte übermittelt
+        if self.moeglicheZuege[index][2] != None:
+            return (self.getPosition(), self.moeglicheZuege[index][2].getPosition(), self.moeglicheZuege[index][0].getPosition())
+        return (self.getPosition(), self.moeglicheZuege[index][0].getPosition())
+
+    def getPosition(self):
+        return (self.X, self.Y)
 
     # Methoden zum setzen eines Status
     def makeWhite(self, bool):
@@ -61,8 +73,8 @@ class Feld:
     def makeClicked(self, bool):
         self.clicked = bool
 
-    def makeNachbar(self, bool):
-        self.Nachbar = bool
+    def makeMoeglicherZug(self, bool):
+        self.moeglicherZug = bool
 
     # Mögliche Züge berechnen
     def getZüge(self):
@@ -88,7 +100,7 @@ class Feld:
                         # Auf leere des nächsten Feldes prüfen
                         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
                             self.moeglicheZuege.append(
-                                (feld[y+j][x+i], (None, None)))
+                                (feld[y+j][x+i], (None, None), None))
 
                     # Auf Gegner prüfen und leere des dahinter liegenden Feldes
                     if not(y+j2 < 0 or x+i2 < 0 or x+i2 > 7):
@@ -99,8 +111,9 @@ class Feld:
                                 feld, player, y+j2, x+i2, feld[y+j][x+i], False)
                             for zug in zwangZüge:
                                 self.moeglicheZuege.append(zug)
-                            self.moeglicheZuege.append(
-                                (feld[y+j2][x+i2], (feld[y+j][x+i], None)))
+                            if zwangZüge == []:
+                                self.moeglicheZuege.append(
+                                    (feld[y+j2][x+i2], (feld[y+j][x+i], None), None))
 
             elif self.isDame():
 
@@ -113,7 +126,8 @@ class Feld:
 
                         # Auf leere des Feldes prüfen
                         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append((feld[y+j][x+i], None))
+                            self.moeglicheZuege.append(
+                                (feld[y+j][x+i], (None, None), None))
                         elif feld[y+j][x+i].isPlayer():
                             break
                         elif feld[y+j][x+i].isComputer():
@@ -127,8 +141,9 @@ class Feld:
                                     feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True)
                                 for zug in zwangZüge:
                                     self.moeglicheZuege.append(zug)
-                                self.moeglicheZuege.append(
-                                    (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None)))
+                                if zwangZüge == []:
+                                    self.moeglicheZuege.append(
+                                        (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None), None))
                             break
 
                         # j und i erhöhen
@@ -152,7 +167,7 @@ class Feld:
                         # Auf leere des nächsten Feldes prüfen
                         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
                             self.moeglicheZuege.append(
-                                (feld[y+j][x+i], (None, None)))
+                                (feld[y+j][x+i], (None, None), None))
 
                     # Auf Gegner prüfen und leere des dahinter liegenden Feldes
                     if not(y+j2 > 7 or x+i2 < 0 or x+i2 > 7):
@@ -163,8 +178,9 @@ class Feld:
                                 feld, player, y+j2, x+i2, feld[y+j][x+i], False)
                             for zug in zwangZüge:
                                 self.moeglicheZuege.append(zug)
-                            self.moeglicheZuege.append(
-                                (feld[y+j2][x+i2], (feld[y+j][x+i], None)))
+                            if zwangZüge == []:
+                                self.moeglicheZuege.append(
+                                    (feld[y+j2][x+i2], (feld[y+j][x+i], None), None))
             elif self.isDame():
 
                 # Solange durchgehen, bis ein Stein oder der Rand kommt
@@ -175,7 +191,8 @@ class Feld:
 
                         # Auf leere des Feldes prüfen
                         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append((feld[y+j][x+i], None))
+                            self.moeglicheZuege.append(
+                                (feld[y+j][x+i], (None, None), None))
                         elif feld[y+j][x+i].isComputer():
                             break
                         elif feld[y+j][x+i].isPlayer():
@@ -189,8 +206,9 @@ class Feld:
                                     feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True)
                                 for zug in zwangZüge:
                                     self.moeglicheZuege.append(zug)
-                                self.moeglicheZuege.append(
-                                    (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None)))
+                                if zwangZüge == []:
+                                    self.moeglicheZuege.append(
+                                        (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None), None))
                             break
 
                         # j und i erhöhen

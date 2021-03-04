@@ -8,8 +8,9 @@ HOEHE = 1000
 
 BLACK = (32, 32, 32)
 WHITE = (255, 255, 255)
-
 GRAU = (100, 100, 100)
+BLAU = (114, 186, 207)
+GRUEN = (113, 146, 113)
 
 LINIENFARBE = (235, 171, 52)
 LINIENDICKE = 5
@@ -69,6 +70,7 @@ def draw(feld, feldgroesse):
 
     screen.fill((255, 255, 255))
 
+    # Felder im Hintergrund zeichnen (unterste Ebene)
     for y in range(feldgroesse):
         for x in range(feldgroesse):
 
@@ -78,18 +80,6 @@ def draw(feld, feldgroesse):
                 feldFarbe = GRAU
             pygame.draw.rect(screen, feldFarbe, (x*feldWeite,
                                                  y*feldHoehe, feldWeite, feldHoehe))
-
-            # Spielfigur
-            if feld[y][x].isComputer():
-                if feld[y][x].isDame():
-                    screen.blit(dameBlau, (x*feldWeite, y*feldHoehe))
-                else:
-                    screen.blit(figurBlau, (x*feldWeite, y*feldHoehe))
-            elif feld[y][x].isPlayer():
-                if feld[y][x].isDame():
-                    screen.blit(dameGruen, (x*feldWeite, y*feldHoehe))
-                else:
-                    screen.blit(figurGruen, (x*feldWeite, y*feldHoehe))
 
             # Zug möglich
             if len(feld[y][x].getZüge()) > 0:
@@ -104,8 +94,46 @@ def draw(feld, feldgroesse):
                 pygame.draw.line(screen, LINIENFARBE, (x*feldWeite+LINIENDICKE//2, y*feldHoehe),
                                  (x*feldWeite+LINIENDICKE//2, y*feldHoehe+feldHoehe+LINIENDICKE//2), LINIENDICKE)
 
+    # Linie zu Ziel zeichnen (mittlere Ebene)
+    for y in range(feldgroesse):
+        for x in range(feldgroesse):
+            if feld[y][x].isClicked():
+                for index in range(len(feld[y][x].getZüge())):
+                    punkteGui = []
+
+                    # X,Y Wert von 0-7
+                    punktePosition = feld[y][x].getPunkte(index)
+                    print(punktePosition)
+
+                    # Punkte werden zu Feldgröße skaliert
+                    for p in punktePosition:
+                        punkteGui.append(
+                            (p[0]*feldWeite+feldWeite//2, p[1]*feldHoehe+feldHoehe//2))
+
+                    # Linie zu Punkten zeichnen
+                    linienFarbe = GRUEN if feld[y][x].isPlayer() else BLAU
+                    pygame.draw.lines(screen, linienFarbe, False,
+                                      punkteGui, width=10)
+
+    # Steine und Punkte in Felder zeichnen (oberste Ebene)
+    for y in range(feldgroesse):
+        for x in range(feldgroesse):
+           # Spielfigur
+            if feld[y][x].isComputer():
+                if feld[y][x].isDame():
+                    screen.blit(dameBlau, (x*feldWeite, y*feldHoehe))
+                else:
+                    screen.blit(figurBlau, (x*feldWeite, y*feldHoehe))
+            elif feld[y][x].isPlayer():
+                if feld[y][x].isDame():
+                    screen.blit(dameGruen, (x*feldWeite, y*feldHoehe))
+                else:
+                    screen.blit(figurGruen, (x*feldWeite, y*feldHoehe))
+
             # Nachbarn markieren
-            if feld[y][x].isNachbar():
+            if feld[y][x].isMoeglicherZug():
+
+                # Kreis in Zentrum des Feldes zeichnen
                 pygame.draw.circle(
                     screen, GRAU, (x*feldWeite+feldWeite//2, y*feldHoehe+feldHoehe//2), feldWeite//6)
 

@@ -16,7 +16,7 @@ class Hauptklasse:
         for y in range(self.SPIELFELDGROESSE):
             spielfeld.append([])
             for x in range(self.SPIELFELDGROESSE):
-                spielfeld[y].append(feld.Feld())
+                spielfeld[y].append(feld.Feld(y, x))
 
                 # Farbe des Feldes
                 if (y + x) % 2 == 0:
@@ -37,6 +37,7 @@ class Hauptklasse:
 
     def main(self, h):
         feld = self.startFeld()
+        feld[5][5].makeDame(True)
 
         gewonnen = False
 
