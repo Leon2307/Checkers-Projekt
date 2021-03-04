@@ -8,6 +8,8 @@ letzteNachbarn = []
 dZügePlayer = [[-1, 1], [-1, -1]]
 dZügeComputer = [[1, -1], [1, 1]]
 dZügeDame = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
+dZügeDame = [[1, -1], [1, 1], [-1, 1], [-1, -1]]
+# Invertiert um beim löschen der gekommenen Richtung die Entgegengesetzte zu entfernen
 
 
 def moeglicheZuege(feld, spieler):
@@ -16,7 +18,7 @@ def moeglicheZuege(feld, spieler):
             feld[y][x].zügeBerechnen(feld, spieler, y, x)
 
 
-def zugzwang(feld, spieler, y, x, übersprungenerStein, isDame):
+def zugzwang(feld, spieler, y, x, übersprungenerStein, isDame, dZügeDameHergekommen):
 
     zwangZüge = []
 
@@ -36,10 +38,11 @@ def zugzwang(feld, spieler, y, x, übersprungenerStein, isDame):
 
     else:
 
-        # Alle Möglichkeiten durchgehen
-        for j, i in dZügeDame:
+        dZügeDameNeu = dZügeDame.copy()
+        del dZügeDameNeu[dZügeDameHergekommen]
 
-            tempZüge = []
+        # Alle Möglichkeiten durchgehen
+        for j, i in dZügeDameNeu:
 
             speicherJ = j
             speicherI = i
@@ -49,11 +52,6 @@ def zugzwang(feld, spieler, y, x, übersprungenerStein, isDame):
                 # Abbrechen wenn eigener Stein auf nächstem Feld
                 if (feld[y+j][x+i].isPlayer() and spieler) or (feld[y+j][x+i].isComputer() and not spieler):
                     break
-
-                # Wenn das nächste Feld leer ist zur Liste hinzufügen
-                elif not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                    tempZüge.append(
-                        (feld[y+j][x+i], (None, übersprungenerStein)))
 
                 # Wenn ein Gegner auf dem nächsten Feld ist
                 elif feld[y+j][x+i].isComputer() and spieler or feld[y+j][x+i].isPlayer() and not spieler:
@@ -65,9 +63,7 @@ def zugzwang(feld, spieler, y, x, übersprungenerStein, isDame):
                     # Wenn das Feld besetzt ist prüfen ob das darauf Folgende frei ist
                     if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
 
-                        # Felder aus tempZüge hinzufügen (Nur wenn ein weiterer Zug in dieser Richtung erfolgen kann)
-                        # for tZug in tempZüge:
-                        # zwangZüge.append(tZug)
+                        # Felder hinzufügen
                         zwangZüge.append(
                             (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], übersprungenerStein), feld[y][x]))
                     break

@@ -90,7 +90,7 @@ class Feld:
             if not self.isDame():
 
                 # Alle Möglichkeiten durchgehen
-                for j, i in self.dZügePlayer:
+                for index, (j, i) in enumerate(self.dZügePlayer):
                     j2 = j*2
                     i2 = i*2
 
@@ -108,7 +108,7 @@ class Feld:
 
                             # Nach Zwangzug suchen
                             zwangZüge = zuege.zugzwang(
-                                feld, player, y+j2, x+i2, feld[y+j][x+i], False)
+                                feld, player, y+j2, x+i2, feld[y+j][x+i], False, index)
                             for zug in zwangZüge:
                                 self.moeglicheZuege.append(zug)
                             if zwangZüge == []:
@@ -118,7 +118,7 @@ class Feld:
             elif self.isDame():
 
                 # Solange durchgehen, bis ein Stein oder der Rand kommt
-                for j, i in self.dZügeDame:
+                for index, (j, i) in enumerate(self.dZügeDame):
                     speicherJ = j
                     speicherI = i
 
@@ -136,9 +136,10 @@ class Feld:
                             if not(y+j+speicherJ < 8 and y+j+speicherJ >= 0 and x+i+speicherI < 8 and x+i+speicherI >= 0):
                                 break
                             if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
+
                                 # Nach Zwangzug suchen
                                 zwangZüge = zuege.zugzwang(
-                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True)
+                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True, index)
                                 for zug in zwangZüge:
                                     self.moeglicheZuege.append(zug)
                                 if zwangZüge == []:
@@ -156,7 +157,7 @@ class Feld:
             if not self.isDame():
 
                 # Alle Möglichkeiten durchgehen
-                for j, i in self.dZügeComputer:
+                for index, (j, i) in enumerate(self.dZügeComputer):
                     j2 = j*2
                     i2 = i*2
 
@@ -175,7 +176,7 @@ class Feld:
 
                             # Nach Zwangzug suchen
                             zwangZüge = zuege.zugzwang(
-                                feld, player, y+j2, x+i2, feld[y+j][x+i], False)
+                                feld, player, y+j2, x+i2, feld[y+j][x+i], False, index)
                             for zug in zwangZüge:
                                 self.moeglicheZuege.append(zug)
                             if zwangZüge == []:
@@ -184,7 +185,7 @@ class Feld:
             elif self.isDame():
 
                 # Solange durchgehen, bis ein Stein oder der Rand kommt
-                for j, i in self.dZügeDame:
+                for index, (j, i) in enumerate(self.dZügeDame):
                     speicherJ = j
                     speicherI = i
                     while y+j < 8 and y+j >= 0 and x+i < 8 and x+i >= 0:
@@ -203,7 +204,7 @@ class Feld:
                             if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
                                 # Nach Zwangzug suchen
                                 zwangZüge = zuege.zugzwang(
-                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True)
+                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True, index)
                                 for zug in zwangZüge:
                                     self.moeglicheZuege.append(zug)
                                 if zwangZüge == []:

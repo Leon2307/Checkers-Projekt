@@ -3,8 +3,10 @@ import sys
 import zuege
 
 
-WEITE = 1000
-HOEHE = 1000
+GAMEWEITE = 1000
+GAMEHOEHE = 1000
+
+SEITENWEITE = 300
 
 BLACK = (32, 32, 32)
 WHITE = (255, 255, 255)
@@ -17,18 +19,18 @@ LINIENDICKE = 5
 
 # Spielfiguren
 figurGruen = pygame.image.load("images/steinGruen.png")
-figurGruen = pygame.transform.scale(figurGruen, (WEITE//8, HOEHE//8))
+figurGruen = pygame.transform.scale(figurGruen, (GAMEWEITE//8, GAMEHOEHE//8))
 figurBlau = pygame.image.load("images/steinBlau.png")
-figurBlau = pygame.transform.scale(figurBlau, (WEITE//8, HOEHE//8))
+figurBlau = pygame.transform.scale(figurBlau, (GAMEWEITE//8, GAMEHOEHE//8))
 
 dameGruen = pygame.image.load("images/dameGruen.png")
-dameGruen = pygame.transform.scale(dameGruen, (WEITE//8, HOEHE//8))
+dameGruen = pygame.transform.scale(dameGruen, (GAMEWEITE//8, GAMEHOEHE//8))
 dameBlau = pygame.image.load("images/dameBlau.png")
-dameBlau = pygame.transform.scale(dameBlau, (WEITE//8, HOEHE//8))
+dameBlau = pygame.transform.scale(dameBlau, (GAMEWEITE//8, GAMEHOEHE//8))
 
 # Fenster initialisieren
 pygame.init()
-screen = pygame.display.set_mode((WEITE, HOEHE))
+gameScreen = pygame.display.set_mode((GAMEWEITE+SEITENWEITE, GAMEHOEHE))
 pygame.display.set_caption("Checkers")
 
 
@@ -55,7 +57,7 @@ def events(feldgroesse, feld):
 
 def getMausFeld(feldgroesse):
     x, y = pygame.mouse.get_pos()
-    field_size = WEITE // feldgroesse
+    field_size = GAMEWEITE // feldgroesse
     derzeitigesX = x // field_size
     derzeitigesY = y // field_size
     return derzeitigesY, derzeitigesX
@@ -63,12 +65,17 @@ def getMausFeld(feldgroesse):
 # Funktion zum Zeichnen der Oberfläche
 
 
+def drawSeitenleiste():
+    dameBild = pygame.image.load('images/dameFigur.png')
+    dameBild = pygame.transform.scale(dameBild, (SEITENWEITE, SEITENWEITE))
+
+
 def draw(feld, feldgroesse):
 
-    feldWeite = WEITE // feldgroesse
-    feldHoehe = HOEHE // feldgroesse
+    feldWeite = GAMEWEITE // feldgroesse
+    feldHoehe = GAMEHOEHE // feldgroesse
 
-    screen.fill((255, 255, 255))
+    gameScreen.fill((255, 255, 255))
 
     # Felder im Hintergrund zeichnen (unterste Ebene)
     for y in range(feldgroesse):
@@ -78,20 +85,20 @@ def draw(feld, feldgroesse):
             feldFarbe = WHITE if feld[y][x].isWhite() else BLACK
             if feld[y][x].isClicked():
                 feldFarbe = GRAU
-            pygame.draw.rect(screen, feldFarbe, (x*feldWeite,
-                                                 y*feldHoehe, feldWeite, feldHoehe))
+            pygame.draw.rect(gameScreen, feldFarbe, (x*feldWeite,
+                                                     y*feldHoehe, feldWeite, feldHoehe))
 
             # Zug möglich
             if len(feld[y][x].getZüge()) > 0:
 
                 # Rechteck um Feld zeichnen
-                pygame.draw.line(screen, LINIENFARBE, (x*feldWeite+LINIENDICKE//2, y*feldHoehe+LINIENDICKE//2),
+                pygame.draw.line(gameScreen, LINIENFARBE, (x*feldWeite+LINIENDICKE//2, y*feldHoehe+LINIENDICKE//2),
                                  (x*feldWeite+feldWeite-LINIENDICKE//2, y*feldHoehe+LINIENDICKE//2), LINIENDICKE)
-                pygame.draw.line(screen, LINIENFARBE, (x*feldWeite+feldWeite-LINIENDICKE//2, y*feldHoehe),
+                pygame.draw.line(gameScreen, LINIENFARBE, (x*feldWeite+feldWeite-LINIENDICKE//2, y*feldHoehe),
                                  (x*feldWeite+feldWeite-LINIENDICKE//2, y*feldHoehe+feldHoehe+LINIENDICKE//2), LINIENDICKE)
-                pygame.draw.line(screen, LINIENFARBE, (x*feldWeite+LINIENDICKE//2, y*feldHoehe+feldHoehe-LINIENDICKE//2),
+                pygame.draw.line(gameScreen, LINIENFARBE, (x*feldWeite+LINIENDICKE//2, y*feldHoehe+feldHoehe-LINIENDICKE//2),
                                  (x*feldWeite+feldWeite-LINIENDICKE//2, y*feldHoehe+feldHoehe-LINIENDICKE//2), LINIENDICKE)
-                pygame.draw.line(screen, LINIENFARBE, (x*feldWeite+LINIENDICKE//2, y*feldHoehe),
+                pygame.draw.line(gameScreen, LINIENFARBE, (x*feldWeite+LINIENDICKE//2, y*feldHoehe),
                                  (x*feldWeite+LINIENDICKE//2, y*feldHoehe+feldHoehe+LINIENDICKE//2), LINIENDICKE)
 
     # Linie zu Ziel zeichnen (mittlere Ebene)
@@ -103,7 +110,6 @@ def draw(feld, feldgroesse):
 
                     # X,Y Wert von 0-7
                     punktePosition = feld[y][x].getPunkte(index)
-                    print(punktePosition)
 
                     # Punkte werden zu Feldgröße skaliert
                     for p in punktePosition:
@@ -112,7 +118,7 @@ def draw(feld, feldgroesse):
 
                     # Linie zu Punkten zeichnen
                     linienFarbe = GRUEN if feld[y][x].isPlayer() else BLAU
-                    pygame.draw.lines(screen, linienFarbe, False,
+                    pygame.draw.lines(gameScreen, linienFarbe, False,
                                       punkteGui, width=10)
 
     # Steine und Punkte in Felder zeichnen (oberste Ebene)
@@ -121,21 +127,24 @@ def draw(feld, feldgroesse):
            # Spielfigur
             if feld[y][x].isComputer():
                 if feld[y][x].isDame():
-                    screen.blit(dameBlau, (x*feldWeite, y*feldHoehe))
+                    gameScreen.blit(dameBlau, (x*feldWeite, y*feldHoehe))
                 else:
-                    screen.blit(figurBlau, (x*feldWeite, y*feldHoehe))
+                    gameScreen.blit(figurBlau, (x*feldWeite, y*feldHoehe))
             elif feld[y][x].isPlayer():
                 if feld[y][x].isDame():
-                    screen.blit(dameGruen, (x*feldWeite, y*feldHoehe))
+                    gameScreen.blit(dameGruen, (x*feldWeite, y*feldHoehe))
                 else:
-                    screen.blit(figurGruen, (x*feldWeite, y*feldHoehe))
+                    gameScreen.blit(figurGruen, (x*feldWeite, y*feldHoehe))
 
             # Nachbarn markieren
             if feld[y][x].isMoeglicherZug():
 
                 # Kreis in Zentrum des Feldes zeichnen
                 pygame.draw.circle(
-                    screen, GRAU, (x*feldWeite+feldWeite//2, y*feldHoehe+feldHoehe//2), feldWeite//6)
+                    gameScreen, GRAU, (x*feldWeite+feldWeite//2, y*feldHoehe+feldHoehe//2), feldWeite//6)
+
+    # Seitenfenster mit Anzeige etc.
+    drawSeitenleiste()
 
     pygame.display.update()
 

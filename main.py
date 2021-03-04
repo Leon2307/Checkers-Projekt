@@ -43,6 +43,7 @@ class Hauptklasse:
 
         # Dauerschleife
         while True:
+
             # Solange das Spiel läuft
             while not gewonnen:
                 zuege.moeglicheZuege(feld, self.momSpieler)
