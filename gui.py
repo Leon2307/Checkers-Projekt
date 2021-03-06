@@ -6,7 +6,7 @@ import zuege
 GAMEWEITE = 1000
 GAMEHOEHE = 1000
 
-SEITENWEITE = 300
+SEITENWEITE = 200
 
 BLACK = (32, 32, 32)
 WHITE = (255, 255, 255)
@@ -17,27 +17,61 @@ GRUEN = (113, 146, 113)
 LINIENFARBE = (235, 171, 52)
 LINIENDICKE = 5
 
-# Spielfiguren
-figurGruen = pygame.image.load("images/steinGruen.png")
-figurGruen = pygame.transform.scale(figurGruen, (GAMEWEITE//8, GAMEHOEHE//8))
-figurBlau = pygame.image.load("images/steinBlau.png")
-figurBlau = pygame.transform.scale(figurBlau, (GAMEWEITE//8, GAMEHOEHE//8))
+wiederholt = 0
 
-dameGruen = pygame.image.load("images/dameGruen.png")
-dameGruen = pygame.transform.scale(dameGruen, (GAMEWEITE//8, GAMEHOEHE//8))
-dameBlau = pygame.image.load("images/dameBlau.png")
-dameBlau = pygame.transform.scale(dameBlau, (GAMEWEITE//8, GAMEHOEHE//8))
+# Spielfiguren
+figurGruenBild = pygame.image.load("images/steinGruen.png")
+figurGruen = pygame.transform.scale(
+    figurGruenBild, (GAMEWEITE//8, GAMEHOEHE//8))
+figurBlauBild = pygame.image.load("images/steinBlau.png")
+figurBlau = pygame.transform.scale(figurBlauBild, (GAMEWEITE//8, GAMEHOEHE//8))
+
+dameGruenBild = pygame.image.load("images/dameGruen.png")
+dameGruen = pygame.transform.scale(dameGruenBild, (GAMEWEITE//8, GAMEHOEHE//8))
+dameBlauBild = pygame.image.load("images/dameBlau.png")
+dameBlau = pygame.transform.scale(dameBlauBild, (GAMEWEITE//8, GAMEHOEHE//8))
+
+# Figuren Seitenfenster
+teiler = 4
+
+figurBlauTrans = pygame.image.load("images/steinBlauTrans.png")
+figurGruenTrans = pygame.image.load("images/steinGruenTrans.png")
+figurBlauSeite = pygame.transform.scale(
+    figurBlauBild, (SEITENWEITE//teiler, SEITENWEITE//teiler))
+figurGruenSeite = pygame.transform.scale(
+    figurGruenBild, (SEITENWEITE//teiler, SEITENWEITE//teiler))
+figurBlauTransSeite = pygame.transform.scale(
+    figurBlauTrans, (SEITENWEITE//teiler, SEITENWEITE//teiler))
+figurGruenTransSeite = pygame.transform.scale(
+    figurGruenTrans, (SEITENWEITE//teiler, SEITENWEITE//teiler))
+
+# Dame-Bild
+dameBild = pygame.image.load('images/dameFigur.png')
+dameBild = pygame.transform.scale(dameBild, (SEITENWEITE, SEITENWEITE))
+
+# Sieger-Bild
+gruenSieger = pygame.image.load("images/gruenGewonnen.png")
+gruenSieger = pygame.transform.scale(
+    gruenSieger, (SEITENWEITE, int(SEITENWEITE*0.3)))
+blauSieger = pygame.image.load("images/blauGewonnen.png")
+blauSieger = pygame.transform.scale(
+    blauSieger, (SEITENWEITE, int(SEITENWEITE*0.3)))
 
 # Fenster initialisieren
 pygame.init()
 gameScreen = pygame.display.set_mode((GAMEWEITE+SEITENWEITE, GAMEHOEHE))
 pygame.display.set_caption("Checkers")
 
+# Schrift initialisieren
+textSize = SEITENWEITE//7
+pygame.font.init()
+font = pygame.font.SysFont("Laksaman", textSize)
+
 
 def mausGedrueckt(feld, feldgroesse, spieler, h):
     global letzteMarkiert, letzteNachbarn
 
-    #mausGedrueckt(feld, feldgroesse)
+    # mausGedrueckt(feld, feldgroesse)
     if pygame.mouse.get_pressed()[0]:
         y, x = getMausFeld(feldgroesse)
 
@@ -65,12 +99,49 @@ def getMausFeld(feldgroesse):
 # Funktion zum Zeichnen der Oberfläche
 
 
-def drawSeitenleiste():
-    dameBild = pygame.image.load('images/dameFigur.png')
-    dameBild = pygame.transform.scale(dameBild, (SEITENWEITE, SEITENWEITE))
+def drawSeitenleiste(feld, spieler):
+    global wiederholt
+
+    # Dame-Bild
+    gameScreen.blit(dameBild, (GAMEWEITE, 0))
+
+    # Spielstand holen
+    sieger, steineComputer, steineSpieler = zuege.spielStand(feld, spieler)
+
+    # rausgeworfene Steine zeichnen
+    for i in range(12):
+
+        # Computer
+        bild = figurBlauSeite if not(
+            i - steineComputer < 0) else figurBlauTransSeite
+
+        xPos = GAMEWEITE+i % teiler * SEITENWEITE // teiler
+        yPos = GAMEHOEHE-(SEITENWEITE//teiler)*(12//teiler) + \
+            i // teiler * (SEITENWEITE // teiler)
+
+        gameScreen.blit(bild, (xPos, yPos))
+
+        # Spieler
+        bild = figurGruenSeite if not(
+            i - steineSpieler < 0) else figurGruenTransSeite
+
+        xPos = GAMEWEITE+i % teiler * SEITENWEITE // teiler
+        yPos = SEITENWEITE + i // teiler * (SEITENWEITE // teiler)
+
+        gameScreen.blit(bild, (xPos, yPos))
+
+    # Gewinner zeichnen
+    if sieger != None:
+        wiederholt += 1
+        if wiederholt > 1:
+            siegerSpieler = gruenSieger if sieger else blauSieger
+            gameScreen.blit(siegerSpieler, (GAMEWEITE, GAMEHOEHE//2))
+
+    else:
+        wiederholt = 0
 
 
-def draw(feld, feldgroesse):
+def draw(feld, feldgroesse, spieler):
 
     feldWeite = GAMEWEITE // feldgroesse
     feldHoehe = GAMEHOEHE // feldgroesse
@@ -144,7 +215,7 @@ def draw(feld, feldgroesse):
                     gameScreen, GRAU, (x*feldWeite+feldWeite//2, y*feldHoehe+feldHoehe//2), feldWeite//6)
 
     # Seitenfenster mit Anzeige etc.
-    drawSeitenleiste()
+    drawSeitenleiste(feld, spieler)
 
     pygame.display.update()
 

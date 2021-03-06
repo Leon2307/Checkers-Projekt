@@ -1,6 +1,7 @@
 import pygame
 import gui
 import feld as f
+import main
 
 letzteMarkiert = None
 letzteNachbarn = []
@@ -16,6 +17,43 @@ def moeglicheZuege(feld, spieler):
     for y in range(len(feld)):
         for x in range(len(feld)):
             feld[y][x].zügeBerechnen(feld, spieler, y, x)
+
+
+def spielStand(feld, spieler):
+
+    # verbliebene Steine auf dem Spielfeld
+    anzahlSpieler = 0
+    anzahlComputer = 0
+
+    # verbliebene Züge auf dem Spielfeld
+    übrigeZügeSpieler = []
+    übrigeZügeComputer = []
+
+    for y in range(len(feld)):
+        for x in range(len(feld)):
+
+            # Anzahl checken
+            if feld[y][x].isPlayer():
+                anzahlSpieler += 1
+                if feld[y][x].getZüge() != []:
+                    übrigeZügeSpieler.append(feld[y][x].getZüge())
+            elif feld[y][x].isComputer():
+                anzahlComputer += 1
+                if feld[y][x].getZüge() != []:
+                    übrigeZügeComputer.append(feld[y][x].getZüge())
+
+    # return Sieger, computerSteine, spielerSteine
+    # Spieler hat gewonnen
+    if übrigeZügeComputer == [] and not spieler or anzahlComputer < 1:
+        return True, anzahlComputer, anzahlSpieler
+
+    # Computer hat gewonnen
+    elif übrigeZügeSpieler == [] and spieler or anzahlSpieler < 1:
+        return False, anzahlComputer, anzahlSpieler
+
+    # Keiner hat gewonnen
+    else:
+        return None, anzahlComputer, anzahlSpieler
 
 
 def zugzwang(feld, spieler, y, x, übersprungenerStein, isDame, dZügeDameHergekommen):
@@ -79,6 +117,9 @@ def zugAusführen(feld, spieler, y, x, h):
     global letzteMarkiert, letzteNachbarn
     nachbarIndex = None
 
+    # Prüfen ob das Feld existiert
+    if y < 0 or y > len(feld)-1 or x < 0 or x > len(feld)-1:
+        return
     # Geklicktes Feld markieren
     if (
         spieler and feld[y][x].isPlayer(
