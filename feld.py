@@ -47,8 +47,12 @@ class Feld:
     def getPunkte(self, index):
 
         # Wenn ein Eckpunkt enthalten ist werden 3, ansonsten 2 Punkte übermittelt
-        if self.moeglicheZuege[index][2] != None:
-            return (self.getPosition(), self.moeglicheZuege[index][2].getPosition(), self.moeglicheZuege[index][0].getPosition())
+        if self.moeglicheZuege[index][2] != [None]:
+            punkte = [self.getPosition()]
+            for pos in self.moeglicheZuege[index][2]:
+                punkte.append(pos.getPosition())
+            punkte.append(self.moeglicheZuege[index][0].getPosition())
+            return punkte
         return (self.getPosition(), self.moeglicheZuege[index][0].getPosition())
 
     def getPosition(self):
@@ -88,33 +92,11 @@ class Feld:
 
             # Für normale Steine
             if not self.isDame():
+                moegZuege = zuege.zugzwang(feld, player, y, x, None, None, 0)
+                if moegZuege != []:
+                    self.moeglicheZuege = moegZuege
 
-                # Alle Möglichkeiten durchgehen
-                for index, (j, i) in enumerate(self.dZügePlayer):
-                    j2 = j*2
-                    i2 = i*2
-
-                    # Auf Existenz prüfen
-                    if not (y+j < 0 or x+i < 0 or x+i > 7):
-
-                        # Auf leere des nächsten Feldes prüfen
-                        if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append(
-                                (feld[y+j][x+i], (None, None), None))
-
-                    # Auf Gegner prüfen und leere des dahinter liegenden Feldes
-                    if not(y+j2 < 0 or x+i2 < 0 or x+i2 > 7):
-                        if feld[y+j][x+i].isComputer() and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
-
-                            # Nach Zwangzug suchen
-                            zwangZüge = zuege.zugzwang(
-                                feld, player, y+j2, x+i2, feld[y+j][x+i], False, index)
-                            for zug in zwangZüge:
-                                self.moeglicheZuege.append(zug)
-                            if zwangZüge == []:
-                                self.moeglicheZuege.append(
-                                    (feld[y+j2][x+i2], (feld[y+j][x+i], None), None))
-
+            # Für Dame
             elif self.isDame():
 
                 # Solange durchgehen, bis ein Stein oder der Rand kommt
@@ -155,33 +137,11 @@ class Feld:
 
             # Für normale Steine
             if not self.isDame():
+                moegZuege = zuege.zugzwang(feld, player, y, x, None, None, 0)
+                if moegZuege != []:
+                    self.moeglicheZuege = moegZuege
 
-                # Alle Möglichkeiten durchgehen
-                for index, (j, i) in enumerate(self.dZügeComputer):
-                    j2 = j*2
-                    i2 = i*2
-
-                    # Auf Existenz prüfen
-
-                    if not(y+j > 7 or x+i < 0 or x+i > 7):
-
-                        # Auf leere des nächsten Feldes prüfen
-                        if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append(
-                                (feld[y+j][x+i], (None, None), None))
-
-                    # Auf Gegner prüfen und leere des dahinter liegenden Feldes
-                    if not(y+j2 > 7 or x+i2 < 0 or x+i2 > 7):
-                        if feld[y+j][x+i].isPlayer() and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
-
-                            # Nach Zwangzug suchen
-                            zwangZüge = zuege.zugzwang(
-                                feld, player, y+j2, x+i2, feld[y+j][x+i], False, index)
-                            for zug in zwangZüge:
-                                self.moeglicheZuege.append(zug)
-                            if zwangZüge == []:
-                                self.moeglicheZuege.append(
-                                    (feld[y+j2][x+i2], (feld[y+j][x+i], None), None))
+            # Für Dame
             elif self.isDame():
 
                 # Solange durchgehen, bis ein Stein oder der Rand kommt

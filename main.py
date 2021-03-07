@@ -57,8 +57,8 @@ class Hauptklasse:
         self.momSpieler = not self.momSpieler
 
     def main(self, h):
-        feld = self.testFeld()
-        feld[5][5].makeDame(True)
+        feld = self.startFeld()
+        # feld[5][5].makeDame(True)
 
         gewonnen = False
 
