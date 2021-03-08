@@ -2,17 +2,20 @@ import pygame
 import gui
 import feld as f
 import main
+import sys
 
 letzteMarkiert = None
 letzteNachbarn = []
 
 dZügePlayer = [[-1, 1], [-1, -1]]
 dZügeComputer = [[1, -1], [1, 1]]
-dZügeDame = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
-dZügeDame = [[1, -1], [1, 1], [-1, 1], [-1, -1]]
+dZügeDame1 = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
+dZügeDame2 = [[1, -1], [1, 1], [-1, 1], [-1, -1]]
 # Invertiert um beim löschen der gekommenen Richtung die Entgegengesetzte zu entfernen
 
 zwangZüge = []
+anfangsX = 0
+anfangsY = 0
 
 
 def moeglicheZuege(feld, spieler):
@@ -59,16 +62,20 @@ def spielStand(feld, spieler):
 
 
 def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
-    global zwangZüge
+    global zwangZüge, anfangsX, anfangsY
 
-    saveDurchgang = durchgang+1
     if durchgang == 0:
         zwangZüge = []
         eckfelder = []
         rausgeworfen = []
+        anfangsX = x
+        anfangsY = y
+    elif durchgang > 7:
+        return False
 
     deltaZüge = dZügePlayer if spieler else dZügeComputer
     zuegeMoeglich = False
+    moeglich = False
 
     # Alle Möglichkeiten durchgehen
     for j, i in deltaZüge:
@@ -96,14 +103,17 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
             neuesFeld = feld[y+j2][x+i2]
             rausgeworfen.append(feld[y+j][x+i])
             eckfelder.append(feld[y][x])
-            moeglich = zugzwang(feld, spieler, y+j2, x+i2,
-                                eckfelder, rausgeworfen, saveDurchgang)
-            print(moeglich)
+            if y+j2 != anfangsY and x+i2 != anfangsX:
+                moeglich = zugzwang(feld, spieler, y+j2, x+i2,
+                                    eckfelder, rausgeworfen, durchgang+1)
             if not moeglich:
-                for f in eckfelder:
-                    print(f.getPosition())
                 zwangZüge.append(
-                    (neuesFeld, rausgeworfen, eckfelder))
+                    (neuesFeld, rausgeworfen.copy(), eckfelder.copy()))
+                for d in range(durchgang+1):
+                    if rausgeworfen != []:
+                        rausgeworfen.pop()
+                    if eckfelder != []:
+                        eckfelder.pop()
 
     if durchgang == 0:
         return zwangZüge
@@ -111,12 +121,26 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
         return zuegeMoeglich
 
 
-def zwangZuegeDame(y, x, spieler, feld, dZügeDameHergekommen):
+def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZügeDameHergekommen):
+    global zwangZüge, anfangsX, anfangsY, dZügeDame1, dZügeDame2
 
-    dZügeDameNeu = dZügeDame.copy()
-    del dZügeDameNeu[dZügeDameHergekommen]
+    dZügeDameNeu = dZügeDame1.copy()
+    if dZügeDameHergekommen != None:
+        for ind, dzug in enumerate(dZügeDameNeu):
+            if dzug == dZügeDameHergekommen:
+                del dZügeDameNeu[ind]
 
-    zwangZüge = []
+    if durchgang == 0:
+        zwangZüge = []
+        eckfelder = []
+        rausgeworfen = []
+        anfangsX = x
+        anfangsY = y
+    elif durchgang > 7:
+        return False
+
+    zuegeMoeglich = False
+    moeglich = False
 
     # Alle Möglichkeiten durchgehen
     for j, i in dZügeDameNeu:
@@ -130,6 +154,11 @@ def zwangZuegeDame(y, x, spieler, feld, dZügeDameHergekommen):
             if (feld[y+j][x+i].isPlayer() and spieler) or (feld[y+j][x+i].isComputer() and not spieler):
                 break
 
+            # Wenn frei ist und Durchgang 0
+            elif not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer() and durchgang == 0:
+                zwangZüge.append(
+                    (feld[y+j][x+i], (None, None), [None]))
+
             # Wenn ein Gegner auf dem nächsten Feld ist
             elif feld[y+j][x+i].isComputer() and spieler or feld[y+j][x+i].isPlayer() and not spieler:
 
@@ -141,13 +170,34 @@ def zwangZuegeDame(y, x, spieler, feld, dZügeDameHergekommen):
                 if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
 
                     # Felder hinzufügen
-                    zwangZüge.append(
-                        (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], übersprungenerStein), feld[y][x]))
+                    zuegeMoeglich = True
+                    neuesFeld = feld[y+j+speicherJ][x+i+speicherI]
+                    rausgeworfen.append(feld[y+j][x+i])
+                    eckfelder.append(feld[y][x])
+                    if y+j+speicherJ != anfangsY and x+i+speicherI != anfangsX:
+                        moeglich = zugzwangDame(y+j+speicherJ, x+i+speicherI, spieler, feld,
+                                                eckfelder, rausgeworfen, durchgang+1, [-speicherJ, -speicherI])
+
+                    if not moeglich:
+                        zwangZüge.append(
+                            (neuesFeld, rausgeworfen.copy(), eckfelder.copy()))
+                        for d in range(durchgang+1):
+                            if rausgeworfen != []:
+                                rausgeworfen.pop()
+                            if eckfelder != []:
+                                eckfelder.pop()
+                            moeglich = False
+
                 break
 
             # j und i erhöhen
             j = j+speicherJ
             i = i+speicherI
+
+    if durchgang == 0:
+        return zwangZüge
+    else:
+        return zuegeMoeglich
 
 
 def zugAusführen(feld, spieler, y, x, h):

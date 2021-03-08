@@ -98,40 +98,10 @@ class Feld:
 
             # Für Dame
             elif self.isDame():
-
-                # Solange durchgehen, bis ein Stein oder der Rand kommt
-                for index, (j, i) in enumerate(self.dZügeDame):
-                    speicherJ = j
-                    speicherI = i
-
-                    while y+j < 8 and y+j >= 0 and x+i < 8 and x+i >= 0:
-
-                        # Auf leere des Feldes prüfen
-                        if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append(
-                                (feld[y+j][x+i], (None, None), None))
-                        elif feld[y+j][x+i].isPlayer():
-                            break
-                        elif feld[y+j][x+i].isComputer():
-
-                            # Wenn das Feld besetzt ist prüfen ob das darauf Folgende frei ist
-                            if not(y+j+speicherJ < 8 and y+j+speicherJ >= 0 and x+i+speicherI < 8 and x+i+speicherI >= 0):
-                                break
-                            if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
-
-                                # Nach Zwangzug suchen
-                                zwangZüge = zuege.zugzwang(
-                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True, index)
-                                for zug in zwangZüge:
-                                    self.moeglicheZuege.append(zug)
-                                if zwangZüge == []:
-                                    self.moeglicheZuege.append(
-                                        (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None), None))
-                            break
-
-                        # j und i erhöhen
-                        j = j+speicherJ
-                        i = i+speicherI
+                moegZuege = zuege.zugzwangDame(
+                    y, x, player, feld, None, None, 0, None)
+                if moegZuege != []:
+                    self.moeglicheZuege = moegZuege
 
         elif self.isComputer() and not player:
 
@@ -143,35 +113,7 @@ class Feld:
 
             # Für Dame
             elif self.isDame():
-
-                # Solange durchgehen, bis ein Stein oder der Rand kommt
-                for index, (j, i) in enumerate(self.dZügeDame):
-                    speicherJ = j
-                    speicherI = i
-                    while y+j < 8 and y+j >= 0 and x+i < 8 and x+i >= 0:
-
-                        # Auf leere des Feldes prüfen
-                        if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer():
-                            self.moeglicheZuege.append(
-                                (feld[y+j][x+i], (None, None), None))
-                        elif feld[y+j][x+i].isComputer():
-                            break
-                        elif feld[y+j][x+i].isPlayer():
-
-                            # Wenn das Feld besetzt ist prüfen ob das darauf Folgende frei ist
-                            if not(y+j+speicherJ < 8 and y+j+speicherJ >= 0 and x+i+speicherI < 8 and x+i+speicherI >= 0):
-                                break
-                            if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
-                                # Nach Zwangzug suchen
-                                zwangZüge = zuege.zugzwang(
-                                    feld, player, y+j+speicherJ, x+i+speicherI, feld[y+j][x+i], True, index)
-                                for zug in zwangZüge:
-                                    self.moeglicheZuege.append(zug)
-                                if zwangZüge == []:
-                                    self.moeglicheZuege.append(
-                                        (feld[y+j+speicherJ][x+i+speicherI], (feld[y+j][x+i], None), None))
-                            break
-
-                        # j und i erhöhen
-                        j = j+speicherJ
-                        i = i+speicherI
+                moegZuege = zuege.zugzwangDame(
+                    y, x, player, feld, None, None, 0, None)
+                if moegZuege != []:
+                    self.moeglicheZuege = moegZuege

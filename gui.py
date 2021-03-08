@@ -195,6 +195,7 @@ def draw(feld, feldgroesse, spieler):
     # Steine und Punkte in Felder zeichnen (oberste Ebene)
     for y in range(feldgroesse):
         for x in range(feldgroesse):
+
            # Spielfigur
             if feld[y][x].isComputer():
                 if feld[y][x].isDame():
