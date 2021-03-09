@@ -101,15 +101,15 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
 
         # Auf Gegner prüfen und leere des dahinter liegenden Feldes
         if (feld[y+j][x+i].isComputer() and spieler or feld[y+j][x+i].isPlayer() and not spieler) and not feld[y+j2][x+i2].isPlayer() and not feld[y+j2][x+i2].isComputer():
+
             zuegeMoeglich = True
             neuesFeld = feld[y+j2][x+i2]
             rausgeworfen.append(feld[y+j][x+i])
             eckfelder.append(feld[y][x])
 
             # Prüfen ob das Feld, zu welchen gesprungen wird nicht das Startfeld ist
-            if not(y+j2 == anfangsY and x+i2 == anfangsX):
-                moeglich = zugzwang(feld, spieler, y+j2, x+i2,
-                                    eckfelder, rausgeworfen, durchgang+1)
+            moeglich = zugzwang(feld, spieler, y+j2, x+i2,
+                                eckfelder, rausgeworfen, durchgang+1)
             if not moeglich:
                 zwangZüge.append(
                     (neuesFeld, rausgeworfen.copy(), eckfelder.copy()))
@@ -172,12 +172,14 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZüge
                 # Wenn das Feld besetzt ist prüfen ob das darauf Folgende frei ist
                 if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
 
-                    # Felder hinzufügen
-                    zuegeMoeglich = True
-                    neuesFeld = feld[y+j+speicherJ][x+i+speicherI]
-                    rausgeworfen.append(feld[y+j][x+i])
-                    eckfelder.append(feld[y][x])
                     if not(y+j+speicherJ == anfangsY and x+i+speicherI == anfangsX):
+
+                        # Felder hinzufügen
+                        zuegeMoeglich = True
+                        neuesFeld = feld[y+j+speicherJ][x+i+speicherI]
+                        rausgeworfen.append(feld[y+j][x+i])
+                        eckfelder.append(feld[y][x])
+
                         moeglich = zugzwangDame(y+j+speicherJ, x+i+speicherI, spieler, feld,
                                                 eckfelder, rausgeworfen, durchgang+1, [-speicherJ, -speicherI])
 
