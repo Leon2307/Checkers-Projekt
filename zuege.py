@@ -71,6 +71,7 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
         anfangsX = x
         anfangsY = y
     elif durchgang > 7:
+        print("Durchgang größer 7")
         return False
 
     deltaZüge = dZügePlayer if spieler else dZügeComputer
@@ -88,6 +89,7 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
 
         # Auf leere des nächsten Feldes prüfen
         if not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer() and durchgang == 0:
+
             # Nächstes Feld als moeglicher Zug hinzufügen
             zwangZüge.append(
                 (feld[y+j][x+i], (None, None), [None]))
@@ -103,17 +105,18 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
             neuesFeld = feld[y+j2][x+i2]
             rausgeworfen.append(feld[y+j][x+i])
             eckfelder.append(feld[y][x])
-            if y+j2 != anfangsY and x+i2 != anfangsX:
+
+            # Prüfen ob das Feld, zu welchen gesprungen wird nicht das Startfeld ist
+            if not(y+j2 == anfangsY and x+i2 == anfangsX):
                 moeglich = zugzwang(feld, spieler, y+j2, x+i2,
                                     eckfelder, rausgeworfen, durchgang+1)
             if not moeglich:
                 zwangZüge.append(
                     (neuesFeld, rausgeworfen.copy(), eckfelder.copy()))
-                for d in range(durchgang+1):
-                    if rausgeworfen != []:
-                        rausgeworfen.pop()
-                    if eckfelder != []:
-                        eckfelder.pop()
+                if rausgeworfen != []:
+                    rausgeworfen.pop()
+                if eckfelder != []:
+                    eckfelder.pop()
 
     if durchgang == 0:
         return zwangZüge
@@ -174,18 +177,18 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZüge
                     neuesFeld = feld[y+j+speicherJ][x+i+speicherI]
                     rausgeworfen.append(feld[y+j][x+i])
                     eckfelder.append(feld[y][x])
-                    if y+j+speicherJ != anfangsY and x+i+speicherI != anfangsX:
+                    if not(y+j+speicherJ == anfangsY and x+i+speicherI == anfangsX):
                         moeglich = zugzwangDame(y+j+speicherJ, x+i+speicherI, spieler, feld,
                                                 eckfelder, rausgeworfen, durchgang+1, [-speicherJ, -speicherI])
 
                     if not moeglich:
                         zwangZüge.append(
                             (neuesFeld, rausgeworfen.copy(), eckfelder.copy()))
-                        for d in range(durchgang+1):
-                            if rausgeworfen != []:
-                                rausgeworfen.pop()
-                            if eckfelder != []:
-                                eckfelder.pop()
+                        # for d in range(durchgang+1):
+                        if rausgeworfen != []:
+                            rausgeworfen.pop()
+                        if eckfelder != []:
+                            eckfelder.pop()
                             moeglich = False
 
                 break

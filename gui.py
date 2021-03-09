@@ -48,6 +48,9 @@ figurGruenTransSeite = pygame.transform.scale(
 # Dame-Bild
 dameBild = pygame.image.load('images/dameFigur.png')
 dameBild = pygame.transform.scale(dameBild, (SEITENWEITE, SEITENWEITE))
+dameBildGold = pygame.image.load('images/dameFigurGold.png')
+dameBildGold = pygame.transform.scale(dameBildGold, (SEITENWEITE, SEITENWEITE))
+
 
 # Sieger-Bild
 gruenSieger = pygame.image.load("images/gruenGewonnen.png")
@@ -67,18 +70,35 @@ textSize = SEITENWEITE//7
 pygame.font.init()
 font = pygame.font.SysFont("Laksaman", textSize)
 
+# Resetting => angeben ob das Spielfeld gerade resettet wird und damit keinen Gewinner anzeigen
+resetting = False
+
 
 def mausGedrueckt(feld, feldgroesse, spieler, h):
-    global letzteMarkiert, letzteNachbarn
+    global letzteMarkiert, letzteNachbarn, resetting
+
+    resetting = False
 
     # mausGedrueckt(feld, feldgroesse)
     if pygame.mouse.get_pressed()[0]:
         y, x = getMausFeld(feldgroesse)
-
         zuege.zugAusführen(feld, spieler, y, x, h)
+        checkReset(h)
 
+
+# Checken ob das Feld durch klicken auf die Krone zurückgesetzt wurde
+def checkReset(h):
+    global resetting
+
+    x, y = pygame.mouse.get_pos()
+    if x > GAMEWEITE and x < GAMEWEITE + SEITENWEITE \
+            and y > 0 and y < SEITENWEITE:
+        resetting = True
+        h.resetFeld()
 
 # Kontrolliert Abbruchbedingung und Events
+
+
 def events(feldgroesse, feld):
 
     for event in pygame.event.get():
@@ -103,7 +123,8 @@ def drawSeitenleiste(feld, spieler):
     global wiederholt
 
     # Dame-Bild
-    gameScreen.blit(dameBild, (GAMEWEITE, 0))
+    aktDameBild = dameBild if not resetting else dameBildGold
+    gameScreen.blit(aktDameBild, (GAMEWEITE, 0))
 
     # Spielstand holen
     sieger, steineComputer, steineSpieler = zuege.spielStand(feld, spieler)
@@ -131,7 +152,7 @@ def drawSeitenleiste(feld, spieler):
         gameScreen.blit(bild, (xPos, yPos))
 
     # Gewinner zeichnen
-    if sieger != None:
+    if sieger != None and not resetting:
         wiederholt += 1
         if wiederholt > 1:
             siegerSpieler = gruenSieger if sieger else blauSieger

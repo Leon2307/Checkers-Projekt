@@ -5,6 +5,7 @@ import zuege
 
 class Hauptklasse:
 
+    feld = []
     SPIELFELDGROESSE = 8
     # momSpieler = True #Momentaner Spieler => spieler = True; computer = False
 
@@ -56,9 +57,13 @@ class Hauptklasse:
     def wechselSpieler(self):
         self.momSpieler = not self.momSpieler
 
+    def resetFeld(self):
+        self.feld = self.startFeld()
+        self.momSpieler = True
+
     def main(self, h):
-        feld = self.startFeld()
-        # feld[5][5].makeDame(True)
+        self.feld = self.startFeld()
+        # self.feld[5][5].makeDame(True)
 
         gewonnen = False
 
@@ -67,13 +72,13 @@ class Hauptklasse:
 
             # Solange das Spiel läuft
             while not gewonnen:
-                zuege.moeglicheZuege(feld, self.momSpieler)
+                zuege.moeglicheZuege(self.feld, self.momSpieler)
                 if self.momSpieler:
-                    zuege.spielerZug(feld, self.SPIELFELDGROESSE, h)
+                    zuege.spielerZug(self.feld, self.SPIELFELDGROESSE, h)
                 else:
-                    zuege.computerZug(feld, self.SPIELFELDGROESSE, h)
+                    zuege.computerZug(self.feld, self.SPIELFELDGROESSE, h)
 
-                gui.draw(feld, self.SPIELFELDGROESSE, self.momSpieler)
+                gui.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler)
 
             # Wenn das Spiel beendet ist
             while gewonnen:
