@@ -67,9 +67,8 @@ def deleteFromList(list, item):
             list.pop(index)
     return list
 
+
 # Überprüft ob in einer Liste mit Zügen mehrere mit dem gleichen Zielfeld sind und pickt den besseren
-
-
 def pickeBeste(zuege):
     for i, zug1 in enumerate(zuege.copy()):
         for j, zug2 in enumerate(zuege.copy()):
