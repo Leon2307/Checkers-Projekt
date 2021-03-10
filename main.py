@@ -63,7 +63,7 @@ class Hauptklasse:
 
     def main(self, h):
         self.feld = self.startFeld()
-        # self.feld[5][5].makeDame(True)
+        self.feld[5][5].makeDame(True)
 
         gewonnen = False
 

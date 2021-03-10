@@ -61,6 +61,33 @@ def spielStand(feld, spieler):
         return None, anzahlComputer, anzahlSpieler
 
 
+def deleteFromList(list, item):
+    for index, i in enumerate(list):
+        if i == item:
+            list.pop(index)
+    return list
+
+# Überprüft ob in einer Liste mit Zügen mehrere mit dem gleichen Zielfeld sind und pickt den besseren
+
+
+def pickeBeste(zuege):
+    for i, zug1 in enumerate(zuege.copy()):
+        for j, zug2 in enumerate(zuege.copy()):
+
+            # Auf gleiches Zielfeld überprüfen
+            if zug1[0] == zug2[0] and not zug1 == zug2:
+
+                # Überprüfen welcher Zug mehr Steine rauswirft
+                if len(zug1[1]) > len(zug2[1]):
+                    zuege = deleteFromList(zuege, zug2)
+                elif len(zug1[1]) < len(zug2[1]):
+                    zuege = deleteFromList(zuege, zug1)
+                else:
+                    zuege = deleteFromList(zuege, zug1)
+
+    return zuege
+
+
 def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
     global zwangZüge, anfangsX, anfangsY
 
@@ -71,7 +98,6 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
         anfangsX = x
         anfangsY = y
     elif durchgang > 7:
-        print("Durchgang größer 7")
         return False
 
     deltaZüge = dZügePlayer if spieler else dZügeComputer
@@ -83,6 +109,13 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
         j2 = j*2
         i2 = i*2
 
+        if durchgang != 0:
+            eckfelderSave = eckfelder.copy()
+            rausgeworfenSave = rausgeworfen.copy()
+        else:
+            eckfelderSave = []
+            rausgeworfenSave = []
+
         # Auf Existenz prüfen
         if y+j < 0 or y+j > 7 or x+i < 0 or x+i > 7:
             continue
@@ -93,7 +126,7 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
             # Nächstes Feld als moeglicher Zug hinzufügen
             zwangZüge.append(
                 (feld[y+j][x+i], (None, None), [None]))
-            continue
+            # continue
 
         # Auf Existenz prüfen
         if y+j2 < 0 or y+j2 > 7 or x+i2 < 0 or x+i2 > 7:
@@ -104,24 +137,44 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
 
             zuegeMoeglich = True
             neuesFeld = feld[y+j2][x+i2]
-            rausgeworfen.append(feld[y+j][x+i])
-            eckfelder.append(feld[y][x])
+            rausgeworfenSave.append(feld[y+j][x+i])
+            eckfelderSave.append(feld[y][x])
 
             # Prüfen ob das Feld, zu welchen gesprungen wird nicht das Startfeld ist
             moeglich = zugzwang(feld, spieler, y+j2, x+i2,
-                                eckfelder, rausgeworfen, durchgang+1)
+                                eckfelderSave, rausgeworfenSave, durchgang+1)
             if not moeglich:
                 zwangZüge.append(
-                    (neuesFeld, rausgeworfen.copy(), eckfelder.copy()))
-                if rausgeworfen != []:
-                    rausgeworfen.pop()
-                if eckfelder != []:
-                    eckfelder.pop()
+                    (neuesFeld, rausgeworfenSave.copy(), eckfelderSave.copy()))
+                rausgeworfenSave.pop()
+                eckfelderSave.pop()
 
     if durchgang == 0:
-        return zwangZüge
+        return pickeBeste(zwangZüge)
     else:
         return zuegeMoeglich
+
+# Checkt ob Der nächste Zug auf ein mögliches/neues Feld geht
+
+
+def bereitsWeg(neuesY, neuesX, eckfelder):
+
+    # Checkt ob Startfeld
+    if neuesY == anfangsY and neuesX == anfangsX:
+        return False
+
+    # Checkt ob bereits abgegangen(eckfeld)
+    for eFeld in eckfelder.copy():
+        if eFeld.getPosition() == (neuesX, neuesY):
+            return False
+
+    # Checkt ob es bereits ein belegtes Feld ist
+    for zug in zwangZüge.copy():
+        if zug[0].getPosition() == (neuesY, neuesX) and zug[2] == [None]:
+            return False
+
+    # Ansonsten True
+    return True
 
 
 def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZügeDameHergekommen):
@@ -172,26 +225,24 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZüge
                 # Wenn das Feld besetzt ist prüfen ob das darauf Folgende frei ist
                 if not feld[y+j+speicherJ][x+i+speicherI].isComputer() and not feld[y+j+speicherJ][x+i+speicherI].isPlayer():
 
-                    if not(y+j+speicherJ == anfangsY and x+i+speicherI == anfangsX):
+                    # Felder hinzufügen
+                    zuegeMoeglich = True
+                    neuesFeld = feld[y+j+speicherJ][x+i+speicherI]
+                    rausgeworfen.append(feld[y+j][x+i])
+                    eckfelder.append(feld[y][x])
 
-                        # Felder hinzufügen
-                        zuegeMoeglich = True
-                        neuesFeld = feld[y+j+speicherJ][x+i+speicherI]
-                        rausgeworfen.append(feld[y+j][x+i])
-                        eckfelder.append(feld[y][x])
-
+                    if bereitsWeg(y+j+speicherJ, x+i+speicherI, eckfelder.copy()):
                         moeglich = zugzwangDame(y+j+speicherJ, x+i+speicherI, spieler, feld,
                                                 eckfelder, rausgeworfen, durchgang+1, [-speicherJ, -speicherI])
 
                     if not moeglich:
+
                         zwangZüge.append(
                             (neuesFeld, rausgeworfen.copy(), eckfelder.copy()))
-                        # for d in range(durchgang+1):
-                        if rausgeworfen != []:
-                            rausgeworfen.pop()
-                        if eckfelder != []:
-                            eckfelder.pop()
-                            moeglich = False
+
+                    rausgeworfen.pop()
+                    eckfelder.pop()
+                    moeglich = False
 
                 break
 
@@ -200,7 +251,7 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZüge
             i = i+speicherI
 
     if durchgang == 0:
-        return zwangZüge
+        return pickeBeste(zwangZüge)
     else:
         return zuegeMoeglich
 
