@@ -1,5 +1,5 @@
 
-import zuege
+import zuege.berechnen as zuege
 
 
 # Klasse zum erzeugen eines Objektes (8x8 Felder)
@@ -8,9 +8,9 @@ class Feld:
     # [Feld zum hinbewegen, [Felder die rausgeworfen werden], [Eckfelder über die gegangen wird]]
     moeglicheZuege = []
 
-    dZügePlayer = [[-1, 1], [-1, -1]]
-    dZügeComputer = [[1, -1], [1, 1]]
-    dZügeDame = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
+    dZuegePlayer = [[-1, 1], [-1, -1]]
+    dZuegeComputer = [[1, -1], [1, 1]]
+    dZuegeDame = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
 
     def __init__(self, y, x):
         self.Y = y
@@ -90,12 +90,12 @@ class Feld:
         return (self.X, self.Y)
 
     # Züge holen
-    def getZüge(self):
+    def getZuege(self):
         return self.moeglicheZuege
 
     # Mögliche Züge berechnen
 
-    def zügeBerechnen(self, feld, player, y, x):
+    def zuegeBerechnen(self, feld, player, y, x):
 
         self.moeglicheZuege = []
 

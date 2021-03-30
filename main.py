@@ -1,6 +1,7 @@
 import feld
-import gui
-import zuege
+import gui.events as evnt
+import gui.draw as draw
+import zuege.berechnen as zuege
 
 
 class Hauptklasse:
@@ -55,11 +56,11 @@ class Hauptklasse:
             while not gewonnen:
                 zuege.moeglicheZuege(self.feld, self.momSpieler)
                 if self.momSpieler:
-                    zuege.spielerZug(self.feld, self.SPIELFELDGROESSE, h)
+                    evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, True, h)
                 else:
-                    zuege.computerZug(self.feld, self.SPIELFELDGROESSE, h)
+                    evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
 
-                gui.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler)
+                draw.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler)
 
             # Wenn das Spiel beendet ist
             while gewonnen:
