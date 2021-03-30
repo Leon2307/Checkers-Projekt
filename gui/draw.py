@@ -44,7 +44,7 @@ def drawSeitenleiste(feld, spieler):
             var.gameScreen.blit(siegerSpieler, (var.GAMEWEITE, var.GAMEHOEHE//2))
 
     else:
-        wiederholt = 0
+        var.wiederholt = 0
 
 
 def draw(feld, feldgroesse, spieler):

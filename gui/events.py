@@ -5,9 +5,9 @@ import sys
 
 # Checkt ob die Maus gedrueckt wurde
 def mausGedrueckt(feld, feldgroesse, spieler, h):
-    global letzteMarkiert, letzteNachbarn, resetting
+    global letzteMarkiert, letzteNachbarn
 
-    resetting = False
+    var.resetting = False
 
     # mausGedrueckt(feld, feldgroesse)
     if pygame.mouse.get_pressed()[0]:
@@ -18,12 +18,11 @@ def mausGedrueckt(feld, feldgroesse, spieler, h):
 
 # Checken ob das Feld durch klicken auf die Krone zurueckgesetzt wurde
 def checkReset(h):
-    global resetting
 
     x, y = pygame.mouse.get_pos()
     if x > var.GAMEWEITE and x < var.GAMEWEITE + var.SEITENWEITE \
             and y > 0 and y < var.SEITENWEITE:
-        resetting = True
+        var.resetting = True
         h.resetFeld()
 
 
