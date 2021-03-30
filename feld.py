@@ -5,7 +5,7 @@ import zuege.berechnen as zuege
 # Klasse zum erzeugen eines Objektes (8x8 Felder)
 class Feld:
 
-    # [Feld zum hinbewegen, [Felder die rausgeworfen werden], [Eckfelder über die gegangen wird]]
+    # [Feld zum hinbewegen, [Felder die rausgeworfen werden], [Eckfelder ueber die gegangen wird]]
     moeglicheZuege = []
 
     dZuegePlayer = [[-1, 1], [-1, -1]]
@@ -69,10 +69,10 @@ class Feld:
         self.moeglicherZug = bool
 
     # Getter
-    # Gibt die Punkte zurück, über die gegangen wird
+    # Gibt die Punkte zurueck, ueber die gegangen wird
     def getPunkte(self, index):
 
-        # Wenn ein Eckpunkt enthalten ist werden 3, ansonsten 2 Punkte übermittelt
+        # Wenn ein Eckpunkt enthalten ist werden 3, ansonsten 2 Punkte uebermittelt
         if self.moeglicheZuege[index][2] != [None]:
 
             punkte = [self.getPosition()]
@@ -85,15 +85,15 @@ class Feld:
 
         return (self.getPosition(), self.moeglicheZuege[index][0].getPosition())
 
-    # gibt Position des Feldes zurück
+    # gibt Position des Feldes zurueck
     def getPosition(self):
         return (self.X, self.Y)
 
-    # Züge holen
+    # Zuege holen
     def getZuege(self):
         return self.moeglicheZuege
 
-    # Mögliche Züge berechnen
+    # Mögliche Zuege berechnen
 
     def zuegeBerechnen(self, feld, player, y, x):
 
@@ -101,13 +101,13 @@ class Feld:
 
         if self.isPlayer() and player:
 
-            # Für normale Steine
+            # Fuer normale Steine
             if not self.isDame():
 
                 moegZuege = zuege.zugzwang(feld, player, y, x, None, None, 0)
                 self.moeglicheZuege = moegZuege
 
-            # Für Dame
+            # Fuer Dame
             elif self.isDame():
 
                 moegZuege = zuege.zugzwangDame(
@@ -116,13 +116,13 @@ class Feld:
 
         elif self.isComputer() and not player:
 
-            # Für normale Steine
+            # Fuer normale Steine
             if not self.isDame():
 
                 moegZuege = zuege.zugzwang(feld, player, y, x, None, None, 0)
                 self.moeglicheZuege = moegZuege
 
-            # Für Dame
+            # Fuer Dame
             elif self.isDame():
 
                 moegZuege = zuege.zugzwangDame(

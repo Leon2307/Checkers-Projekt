@@ -38,7 +38,7 @@ class Hauptklasse:
     def wechselSpieler(self):
         self.momSpieler = not self.momSpieler
 
-    # Feld zurücksetzen
+    # Feld zuruecksetzen
     def resetFeld(self):
         self.feld = self.startFeld()
         self.momSpieler = True

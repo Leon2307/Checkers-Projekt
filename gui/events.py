@@ -3,7 +3,7 @@ import zuege.ausfuehren as zuege
 import gui.variablen as var
 import sys
 
-# Checkt ob die Maus gedrückt wurde
+# Checkt ob die Maus gedrueckt wurde
 def mausGedrueckt(feld, feldgroesse, spieler, h):
     global letzteMarkiert, letzteNachbarn, resetting
 
@@ -16,7 +16,7 @@ def mausGedrueckt(feld, feldgroesse, spieler, h):
         checkReset(h)
 
 
-# Checken ob das Feld durch klicken auf die Krone zurückgesetzt wurde
+# Checken ob das Feld durch klicken auf die Krone zurueckgesetzt wurde
 def checkReset(h):
     global resetting
 

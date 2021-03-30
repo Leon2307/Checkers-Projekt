@@ -1,15 +1,15 @@
 
 
-# Überprüft wie viele Steine noch drin sind und ob gewonnen wurde
+# Überprueft wie viele Steine noch drin sind und ob gewonnen wurde
 def spielStand(feld, spieler):
 
     # verbliebene Steine auf dem Spielfeld
     anzahlSpieler = 0
     anzahlComputer = 0
 
-    # verbliebene Züge auf dem Spielfeld
-    übrigeZügeSpieler = []
-    übrigeZügeComputer = []
+    # verbliebene Zuege auf dem Spielfeld
+    uebrigeZuegeSpieler = []
+    uebrigeZuegeComputer = []
 
     for y in range(len(feld)):
         for x in range(len(feld)):
@@ -17,21 +17,21 @@ def spielStand(feld, spieler):
             # Anzahl checken
             if feld[y][x].isPlayer():
                 anzahlSpieler += 1
-                if feld[y][x].getZüge() != []:
-                    übrigeZügeSpieler.append(feld[y][x].getZüge())
+                if feld[y][x].getZuege() != []:
+                    uebrigeZuegeSpieler.append(feld[y][x].getZuege())
 
             elif feld[y][x].isComputer():
                 anzahlComputer += 1
-                if feld[y][x].getZüge() != []:
-                    übrigeZügeComputer.append(feld[y][x].getZüge())
+                if feld[y][x].getZuege() != []:
+                    uebrigeZuegeComputer.append(feld[y][x].getZuege())
 
     # return Sieger, computerSteine, spielerSteine
     # Spieler hat gewonnen
-    if übrigeZügeComputer == [] and not spieler or anzahlComputer < 1:
+    if uebrigeZuegeComputer == [] and not spieler or anzahlComputer < 1:
         return True, anzahlComputer, anzahlSpieler
 
     # Computer hat gewonnen
-    elif übrigeZügeSpieler == [] and spieler or anzahlSpieler < 1:
+    elif uebrigeZuegeSpieler == [] and spieler or anzahlSpieler < 1:
         return False, anzahlComputer, anzahlSpieler
 
     # Keiner hat gewonnen

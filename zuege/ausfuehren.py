@@ -6,12 +6,12 @@ def zugAusfuehren(feld, spieler, y, x, h):
     global letzteMarkiert, letzteNachbarn
     nachbarIndex = None
 
-    # Prüfen ob das Feld existiert
+    # Pruefen ob das Feld existiert
     if y < 0 or y > len(feld)-1 or x < 0 or x > len(feld)-1:
         return
 
     # Geklicktes Feld markieren
-    if (spieler and feld[y][x].isPlayer() or not spieler and feld[y][x].isComputer()) and len(feld[y][x].getZüge()) > 0:
+    if (spieler and feld[y][x].isPlayer() or not spieler and feld[y][x].isComputer()) and len(feld[y][x].getZuege()) > 0:
 
         # Das zuletzt markierte Feld leeren
         if letzteMarkiert != None:
@@ -24,8 +24,8 @@ def zugAusfuehren(feld, spieler, y, x, h):
         letzteMarkiert = feld[y][x]
         feld[y][x].makeClicked(True)
 
-        # mögliche Züge markieren
-        for zug in feld[y][x].getZüge():
+        # mögliche Zuege markieren
+        for zug in feld[y][x].getZuege():
 
             zug[0].makeMoeglicherZug(True)
             letzteNachbarn.append(zug[0])
@@ -45,10 +45,10 @@ def zugAusfuehren(feld, spieler, y, x, h):
             feld[y][x].makeDame(True)
         letzteMarkiert.makeDame(False)
 
-        # Prüfen ob eine Dame entsteht
+        # Pruefen ob eine Dame entsteht
         checkDame(feld[y][x], y, spieler)
 
-        # Nachbarn zurücksetzen und index des geklickten Nachbarn ermitteln
+        # Nachbarn zuruecksetzen und index des geklickten Nachbarn ermitteln
         i = 0
         for n in letzteNachbarn:
             if n == feld[y][x]:
@@ -58,8 +58,8 @@ def zugAusfuehren(feld, spieler, y, x, h):
         h.wechselSpieler()
 
         # rauswerfen
-        if letzteMarkiert.getZüge()[nachbarIndex][1] != None:
-            for letzteZuege in letzteMarkiert.getZüge()[nachbarIndex][1]:
+        if letzteMarkiert.getZuege()[nachbarIndex][1] != None:
+            for letzteZuege in letzteMarkiert.getZuege()[nachbarIndex][1]:
                 if letzteZuege != None:
                     letzteZuege.makePlayer(False)
                     letzteZuege.makeComputer(False)
@@ -69,7 +69,7 @@ def zugAusfuehren(feld, spieler, y, x, h):
         letzteNachbarn = []
 
 
-# Prüft ob durch Zug eine Dame entsteht
+# Prueft ob durch Zug eine Dame entsteht
 def checkDame(aktuellesFeld, y, spieler):
     if spieler and y == 0 or not spieler and y == 7:
         aktuellesFeld.makeDame(True)

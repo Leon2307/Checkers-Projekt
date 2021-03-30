@@ -17,7 +17,7 @@ LINIENDICKE = 5
 wiederholt = 0
 
 # Spielfiguren
-# Grün
+# Gruen
 figurGruenBild = pygame.image.load("images/steinGruen.png")
 figurGruen = pygame.transform.scale(
     figurGruenBild, (GAMEWEITE//8, GAMEHOEHE//8))
@@ -26,7 +26,7 @@ figurGruen = pygame.transform.scale(
 figurBlauBild = pygame.image.load("images/steinBlau.png")
 figurBlau = pygame.transform.scale(figurBlauBild, (GAMEWEITE//8, GAMEHOEHE//8))
 
-# Dame Grün
+# Dame Gruen
 dameGruenBild = pygame.image.load("images/dameGruen.png")
 dameGruen = pygame.transform.scale(dameGruenBild, (GAMEWEITE//8, GAMEHOEHE//8))
 
@@ -38,7 +38,7 @@ dameBlau = pygame.transform.scale(dameBlauBild, (GAMEWEITE//8, GAMEHOEHE//8))
 teiler = 4
 
 # Figuren Seitenfenster (Transparent)
-# Grün
+# Gruen
 figurGruenTrans = pygame.image.load("images/steinGruenTrans.png")
 figurGruenSeite = pygame.transform.scale(
     figurGruenBild, (SEITENWEITE//teiler, SEITENWEITE//teiler))
@@ -60,7 +60,7 @@ dameBildGold = pygame.transform.scale(dameBildGold, (SEITENWEITE, SEITENWEITE))
 
 
 # Sieger-Bild
-# Grün
+# Gruen
 gruenSieger = pygame.image.load("images/gruenGewonnen.png")
 gruenSieger = pygame.transform.scale(
     gruenSieger, (SEITENWEITE, int(SEITENWEITE*0.3)))
