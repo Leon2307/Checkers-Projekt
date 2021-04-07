@@ -12,7 +12,7 @@ def deleteFromList(list, item):
     return list
 
 
-# Überprueft ob in einer Liste mit Zuegen mehrere mit dem gleichen Zielfeld sind und pickt den besseren
+# ueberprueft ob in einer Liste mit Zuegen mehrere mit dem gleichen Zielfeld sind und pickt den besseren
 def pickeBeste(zuege):
     for i, zug1 in enumerate(zuege.copy()):
         for j, zug2 in enumerate(zuege.copy()):
@@ -20,7 +20,7 @@ def pickeBeste(zuege):
             # Auf gleiches Zielfeld ueberpruefen
             if zug1[0] == zug2[0] and not zug1 == zug2:
 
-                # Überpruefen welcher Zug mehr Steine rauswirft
+                # ueberpruefen welcher Zug mehr Steine rauswirft
                 if len(zug1[1]) > len(zug2[1]):
                     zuege = deleteFromList(zuege, zug2)
                 elif len(zug1[1]) < len(zug2[1]):

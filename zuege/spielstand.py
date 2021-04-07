@@ -1,6 +1,6 @@
 
 
-# Überprueft wie viele Steine noch drin sind und ob gewonnen wurde
+# ueberprueft wie viele Steine noch drin sind und ob gewonnen wurde
 def spielStand(feld, spieler):
 
     # verbliebene Steine auf dem Spielfeld

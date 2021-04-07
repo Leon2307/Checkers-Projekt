@@ -2,12 +2,16 @@ import feld
 import gui.events as evnt
 import gui.draw as draw
 import zuege.berechnen as zuege
+import zuege.computer.minimax as mm
+import zuege.computer.ausfuehrenComputer as ausComp
+import copy
 
 
 class Hauptklasse:
 
     feld = []
     SPIELFELDGROESSE = 8
+    moegZuege = None
 
     def __init__(self):
         self.momSpieler = True  # Momentaner Spieler => spieler = True; computer = False
@@ -58,7 +62,14 @@ class Hauptklasse:
                 if self.momSpieler:
                     evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, True, h)
                 else:
-                    evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
+                    #evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
+                    tiefe = 5
+                    besterZug = mm.minimax(
+                        copy.deepcopy(self.feld), tiefe, False)[1]
+                    #print("bester Zug:", mm.zuglisteGenerieren(self.feld, self.momSpieler)[besterZug])
+                    besterZug = mm.zuglisteGenerieren(self.feld, self.momSpieler)[besterZug]
+                    ausComp.ziehen(self.feld, besterZug, False)
+                    h.wechselSpieler()
 
                 draw.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler)
 

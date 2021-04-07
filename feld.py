@@ -93,8 +93,10 @@ class Feld:
     def getZuege(self):
         return self.moeglicheZuege
 
-    # Mögliche Zuege berechnen
+    def setZuege(self, zuege):
+        self.moeglicheZuege = zuege
 
+    # Mögliche Zuege berechnen
     def zuegeBerechnen(self, feld, player, y, x):
 
         self.moeglicheZuege = []
