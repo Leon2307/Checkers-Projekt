@@ -55,6 +55,7 @@ def zugAusfuehren(feld, spieler, y, x, h):
                 nachbarIndex = i
             n.makeMoeglicherZug(False)
             i += 1
+        h.resetBereitsBerechnet()
         h.wechselSpieler()
 
         # rauswerfen

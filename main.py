@@ -12,6 +12,7 @@ class Hauptklasse:
     feld = []
     SPIELFELDGROESSE = 8
     moegZuege = None
+    bereitsBerechnet = False
 
     def __init__(self):
         self.momSpieler = True  # Momentaner Spieler => spieler = True; computer = False
@@ -47,6 +48,10 @@ class Hauptklasse:
         self.feld = self.startFeld()
         self.momSpieler = True
 
+    # bereitsBerechnet zuruecksetzen
+    def resetBereitsBerechnet(self):
+        self.bereitsBerechnet = False
+
     # Hauptklasse
     def main(self, h):
         self.feld = self.startFeld()
@@ -63,13 +68,15 @@ class Hauptklasse:
                     evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, True, h)
                 else:
                     #evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
-                    tiefe = 5
-                    besterZug = mm.minimax(
-                        copy.deepcopy(self.feld), tiefe, False)[1]
-                    #print("bester Zug:", mm.zuglisteGenerieren(self.feld, self.momSpieler)[besterZug])
-                    besterZug = mm.zuglisteGenerieren(self.feld, self.momSpieler)[besterZug]
-                    ausComp.ziehen(self.feld, besterZug, False)
-                    h.wechselSpieler()
+                    if not self.bereitsBerechnet:
+                        tiefe = 5
+                        besterZug = mm.minimax(
+                            copy.deepcopy(self.feld), tiefe, False)[1]
+                        besterZug = mm.zuglisteGenerieren(self.feld, self.momSpieler)[besterZug]
+                        self.bereitsBerechnet = True
+                    else:
+                        zuege.setzeBestenZug(self.feld, besterZug)
+                        evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
 
                 draw.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler)
 

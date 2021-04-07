@@ -12,6 +12,14 @@ def moeglicheZuege(feld, spieler):
         for x in range(len(feld)):
             feld[y][x].zuegeBerechnen(feld, spieler, y, x)
 
+# Nur den einen möglichen Zug des Computers anzeigen
+def setzeBestenZug(feld, einzigerZug):
+    for y in range(len(feld)):
+        for x in range(len(feld)):
+            feld[y][x].setZuege([])
+    
+    einzigerZug[3].setZuege([einzigerZug])
+
 
 def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
     global zwangZuege, anfangsX, anfangsY
