@@ -9,7 +9,7 @@ speicherFeld = []
 # Minimax
 def minimax(feld, tiefe, spieler):
 
-    if tiefe == 5:
+    if tiefe == 6:
         speicherFeld = copy.deepcopy(feld)
 
     if tiefe == 0:
@@ -22,29 +22,28 @@ def minimax(feld, tiefe, spieler):
     if spieler:
         bestesErgebnis = float('inf')
         besterZug = None
-        for i, zug in enumerate(zuglisteGenerieren(feld, True)):
+        for i, zugAlt in enumerate(zuglisteGenerieren(feld, True)):
             feldKopie = copy.deepcopy(feld)
-            ausComp.ziehen(feldKopie, zug, spieler)
-            bewertung, _ = minimax(feldKopie, tiefe-1, False)[0]
-            #ausComp.ziehenZurueck(feld, zugKopie, spieler)
+            zugNeu = zuglisteGenerieren(feldKopie,True)[i]
+            ausComp.ziehen(feldKopie, zugNeu, spieler)
+            bewertung = minimax(feldKopie, tiefe-1, False)[0]
             bestesErgebnis = min(bewertung, bestesErgebnis)
             if bestesErgebnis == bewertung:
-                besterZug = zug
+                besterZug = zugAlt
 
         return bestesErgebnis, besterZug
 
     else:
         bestesErgebnis = float('-inf')
         besterZug = None
-        for i, zug in enumerate(zuglisteGenerieren(feld, False)):
+        for i, zugAlt in enumerate(zuglisteGenerieren(feld, False)):
             feldKopie = copy.deepcopy(feld)
-            ausComp.ziehen(feldKopie, zug, spieler)
+            zugNeu = zuglisteGenerieren(feldKopie, False)[i]
+            ausComp.ziehen(feldKopie, zugNeu, spieler)
             bewertung = minimax(feldKopie, tiefe-1, True)[0]
-            #feld = copy.deepcopy(feldKopie)
-            #ausComp.ziehenZurueck(feld, zugKopie, spieler)
             bestesErgebnis = max(bewertung, bestesErgebnis)
             if bestesErgebnis == bewertung:
-                besterZug = i
+                besterZug = zugAlt
 
         return bestesErgebnis, besterZug
 
@@ -56,8 +55,8 @@ def zuglisteGenerieren(feld, spieler):
 
     alleZuege = []
 
-    for y in range(8):
-        for x in range(8):
+    for y in range(len(feld)):
+        for x in range(len(feld)):
 
             if feld[y][x].isPlayer() and spieler:
                 for zug in feld[y][x].getZuege():
@@ -74,19 +73,13 @@ def zuglisteGenerieren(feld, spieler):
 def zugBewerten(neuesFeld, altesFeld, spieler):
 
     # Gewichtung
-    rauswurf = 2
+    rauswurf = 3
     dame = 4
 
-    # Damen muessen noch berechnet werden
-    dameSpielerAlt = 1
-    dameSpielerNeu = 1
-    dameComputerAlt = 1
-    dameComputerNeu = 1
-
     # Spielstand holen
-    gewinnerAlt, anzahlComputerAlt, anzahlSpielerAlt = spielstand.spielStand(
+    gewinnerAlt, anzahlComputerAlt, dameComputerAlt, anzahlSpielerAlt, dameSpielerAlt = spielstand.spielStand(
         altesFeld, spieler)
-    gewinnerNeu, anzahlComputerNeu, anzahlSpielerNeu = spielstand.spielStand(
+    gewinnerNeu, anzahlComputerNeu, dameComputerNeu, anzahlSpielerNeu, dameSpielerNeu = spielstand.spielStand(
         neuesFeld, spieler)
 
     # Damedifferenz berechnen
@@ -105,5 +98,7 @@ def zugBewerten(neuesFeld, altesFeld, spieler):
 
     # Bewertung ausrechnen und zurueckgeben
     bewertung = dameDiff + steineDiff
+    if gewinnerAlt == None and gewinnerNeu != None:
+        bewertung = float('inf') if not spieler else float('-inf') 
 
     return bewertung

@@ -5,7 +5,9 @@ def spielStand(feld, spieler):
 
     # verbliebene Steine auf dem Spielfeld
     anzahlSpieler = 0
+    anzahlDameSpieler = 0
     anzahlComputer = 0
+    anzahlDameComputer = 0
 
     # verbliebene Zuege auf dem Spielfeld
     uebrigeZuegeSpieler = []
@@ -17,25 +19,29 @@ def spielStand(feld, spieler):
             # Anzahl checken
             if feld[y][x].isPlayer():
                 anzahlSpieler += 1
+                if feld[y][x].isDame():
+                    anzahlDameSpieler += 1
                 if feld[y][x].getZuege() != []:
                     uebrigeZuegeSpieler.append(feld[y][x].getZuege())
 
             elif feld[y][x].isComputer():
                 anzahlComputer += 1
+                if feld[y][x].isDame():
+                    anzahlDameComputer += 1
                 if feld[y][x].getZuege() != []:
                     uebrigeZuegeComputer.append(feld[y][x].getZuege())
 
     # return Sieger, computerSteine, spielerSteine
     # Spieler hat gewonnen
     if uebrigeZuegeComputer == [] and not spieler or anzahlComputer < 1:
-        return True, anzahlComputer, anzahlSpieler
+        return True, anzahlComputer, anzahlDameComputer, anzahlSpieler, anzahlDameSpieler
 
     # Computer hat gewonnen
     elif uebrigeZuegeSpieler == [] and spieler or anzahlSpieler < 1:
-        return False, anzahlComputer, anzahlSpieler
+        return False, anzahlComputer, anzahlDameComputer, anzahlSpieler, anzahlDameSpieler
 
     # Keiner hat gewonnen
     else:
-        return None, anzahlComputer, anzahlSpieler
+        return None, anzahlComputer, anzahlDameComputer, anzahlSpieler, anzahlDameSpieler
 
 

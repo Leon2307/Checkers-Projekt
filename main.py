@@ -1,3 +1,4 @@
+from zuege import ausfuehren
 import feld
 import gui.events as evnt
 import gui.draw as draw
@@ -69,11 +70,15 @@ class Hauptklasse:
                 else:
                     #evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
                     if not self.bereitsBerechnet:
-                        tiefe = 5
+                        tiefe = 6
                         besterZug = mm.minimax(
-                            copy.deepcopy(self.feld), tiefe, False)[1]
-                        besterZug = mm.zuglisteGenerieren(self.feld, self.momSpieler)[besterZug]
+                            self.feld, tiefe, False)[1]
                         self.bereitsBerechnet = True
+                        besterZug[3].makeClicked(True)
+                        ausfuehren.setLetzteMarkiert(besterZug[3])
+                        besterZug[0].makeMoeglicherZug(True)
+                        ausfuehren.setLetzteNachbarn([besterZug[0]])
+                        continue
                     else:
                         zuege.setzeBestenZug(self.feld, besterZug)
                         evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)

@@ -5,7 +5,7 @@ import zuege.berechnen as zuege
 # Klasse zum erzeugen eines Objektes (8x8 Felder)
 class Feld:
 
-    # [Feld zum hinbewegen, [Felder die rausgeworfen werden], [Eckfelder ueber die gegangen wird]]
+    # [Feld zum hinbewegen, [Felder die rausgeworfen werden], [Eckfelder ueber die gegangen wird], Startfeld]
     moeglicheZuege = []
 
     dZuegePlayer = [[-1, 1], [-1, -1]]
@@ -106,7 +106,7 @@ class Feld:
             # Fuer normale Steine
             if not self.isDame():
 
-                moegZuege = zuege.zugzwang(feld, player, y, x, None, None, 0)
+                moegZuege = zuege.zugzwang(feld, player, y, x)
                 self.moeglicheZuege = moegZuege
 
             # Fuer Dame
@@ -121,7 +121,7 @@ class Feld:
             # Fuer normale Steine
             if not self.isDame():
 
-                moegZuege = zuege.zugzwang(feld, player, y, x, None, None, 0)
+                moegZuege = zuege.zugzwang(feld, player, y, x)
                 self.moeglicheZuege = moegZuege
 
             # Fuer Dame

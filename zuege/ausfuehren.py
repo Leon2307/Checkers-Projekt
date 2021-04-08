@@ -2,6 +2,14 @@
 letzteMarkiert = None
 letzteNachbarn = []
 
+def setLetzteMarkiert(markiert):
+    global letzteMarkiert
+    letzteMarkiert = markiert
+
+def setLetzteNachbarn(nachbarn):
+    global letzteNachbarn
+    letzteNachbarn = nachbarn
+
 def zugAusfuehren(feld, spieler, y, x, h):
     global letzteMarkiert, letzteNachbarn
     nachbarIndex = None

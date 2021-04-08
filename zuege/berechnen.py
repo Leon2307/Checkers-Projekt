@@ -19,9 +19,10 @@ def setzeBestenZug(feld, einzigerZug):
             feld[y][x].setZuege([])
     
     einzigerZug[3].setZuege([einzigerZug])
+    print("get:",einzigerZug[3].getZuege())
 
 
-def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
+def zugzwang(feld, spieler, y, x, eckfelder=None, rausgeworfen=None, durchgang=0):
     global zwangZuege, anfangsX, anfangsY
 
     # Wenn der Durchgang 0 (1. Mal) ist wird alles auf Ausgangswert gesetzt
@@ -60,7 +61,7 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
 
             # Nächstes Feld als moeglicher Zug hinzufuegen
             zwangZuege.append(
-                (feld[y+j][x+i], (None, None), [None], feld[y][x]))
+                [feld[y+j][x+i], [None, None], [None], feld[y][x]])
             # continue
 
         # Auf Existenz pruefen
@@ -82,7 +83,7 @@ def zugzwang(feld, spieler, y, x, eckfelder, rausgeworfen, durchgang):
             # Falls nicht weiter gegangen werden konnte aktuelles Feld hinzufuegen
             if not moeglich:
                 zwangZuege.append(
-                    (neuesFeld, rausgeworfenSave.copy(), eckfelderSave.copy(), feld[y][x]))
+                    (neuesFeld, rausgeworfenSave.copy(), eckfelderSave.copy(), feld[anfangsY][anfangsX]))
                 rausgeworfenSave.pop()
                 eckfelderSave.pop()
 
@@ -130,7 +131,7 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuege
             # Wenn frei ist und Durchgang 0
             elif not feld[y+j][x+i].isPlayer() and not feld[y+j][x+i].isComputer() and durchgang == 0:
                 zwangZuege.append(
-                    (feld[y+j][x+i], (None, None), [None], feld[y][x]))
+                    [feld[y+j][x+i], [None, None], [None], feld[y][x]])
 
             # Wenn ein Gegner auf dem nächsten Feld ist
             elif feld[y+j][x+i].isComputer() and spieler or feld[y+j][x+i].isPlayer() and not spieler:
@@ -149,7 +150,7 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuege
                     eckfelder.append(feld[y][x])
 
                     # Wenn die neue Position nicht möglich ist, da bereits abgegangen
-                    if optm.bereitsWeg(y+j+speicherJ, x+i+speicherI, eckfelder.copy(), zwangZuege.copy()):
+                    if optm.bereitsWeg(y+j+speicherJ, x+i+speicherI, eckfelder, zwangZuege):
                         moeglich = zugzwangDame(y+j+speicherJ, x+i+speicherI, spieler, feld,
                                                 eckfelder, rausgeworfen, durchgang+1, [-speicherJ, -speicherI])
 
@@ -157,7 +158,7 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuege
                     if not moeglich:
 
                         zwangZuege.append(
-                            (neuesFeld, rausgeworfen.copy(), eckfelder.copy(), feld[y][x]))
+                            (neuesFeld, rausgeworfen.copy(), eckfelder.copy(), feld[anfangsY][anfangsX]))
 
                     rausgeworfen.pop()
                     eckfelder.pop()

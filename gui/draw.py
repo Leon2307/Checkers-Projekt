@@ -12,7 +12,7 @@ def drawSeitenleiste(feld, spieler):
     var.gameScreen.blit(aktDameBild, (var.GAMEWEITE, 0))
 
     # Spielstand holen
-    sieger, steineComputer, steineSpieler = zuege.spielStand(feld, spieler)
+    sieger, steineComputer, _, steineSpieler,_ = zuege.spielStand(feld, spieler)
 
     # rausgeworfene Steine zeichnen
     for i in range(12):
