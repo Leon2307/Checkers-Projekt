@@ -1,6 +1,7 @@
 from zuege import spielstand, berechnen
 from zuege import ausfuehren
 import copy
+import random
 
 
 speicherFeld = []
@@ -19,10 +20,11 @@ def minimax(feld, spieler, tiefe=berechnungstiefe):
 
     sieger = spielstand.spielStand(feld, spieler)[0]
     if sieger != None:
-        return (-99999 if sieger else 99999), None
+        return (float('-inf') if sieger else float('inf')), None
 
     bestesErgebnis = float('inf') if spieler else float('-inf')
-    besterZug = None
+    bestesErgebnisAlt = float('inf') if spieler else float('-inf')
+    besteZuege = []
     for i, zugAlt in enumerate(zuglisteGenerieren(feld, spieler)):
         feldKopie = copy.deepcopy(feld)
         zugNeu = zuglisteGenerieren(feldKopie, spieler)[i]
@@ -31,9 +33,14 @@ def minimax(feld, spieler, tiefe=berechnungstiefe):
         bestesErgebnis = min(bewertung, bestesErgebnis) if spieler \
             else max(bewertung, bestesErgebnis)
         if bestesErgebnis == bewertung:
-            besterZug = zugAlt
+            if bestesErgebnis == bestesErgebnisAlt:
+                besteZuege.append(zugAlt)
+            elif bestesErgebnis > bestesErgebnisAlt and not spieler \
+                or bestesErgebnis < bestesErgebnisAlt and spieler:
+                besteZuege = [zugAlt]
+            bestesErgebnisAlt = bestesErgebnis
 
-    return bestesErgebnis, besterZug
+    return bestesErgebnis, random.choice(besteZuege)
 
 
 # Liste mit möglichen Zuegen generieren

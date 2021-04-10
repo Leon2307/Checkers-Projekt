@@ -4,6 +4,7 @@ import gui.events as evnt
 import gui.draw as draw
 import zuege.berechnen as zuege
 import zuege.minimax as mm
+from time import sleep
 
 class Hauptklasse:
 
