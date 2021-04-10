@@ -9,8 +9,9 @@ berechnungstiefe = 6
 
 # Minimax
 def minimax(feld, spieler, tiefe=berechnungstiefe):
+    global berechnungstiefe, speicherFeld
 
-    if tiefe == 6:
+    if tiefe == berechnungstiefe:
         speicherFeld = copy.deepcopy(feld)
 
     if tiefe == 0:

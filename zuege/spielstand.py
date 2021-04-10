@@ -1,8 +1,8 @@
-
+from zuege.berechnen import moeglicheZuege
 
 # ueberprueft wie viele Steine noch drin sind und ob gewonnen wurde
 def spielStand(feld, spieler):
-
+    
     # verbliebene Steine auf dem Spielfeld
     anzahlSpieler = 0
     anzahlDameSpieler = 0
@@ -13,6 +13,7 @@ def spielStand(feld, spieler):
     uebrigeZuegeSpieler = []
     uebrigeZuegeComputer = []
 
+    moeglicheZuege(feld, True)
     for y in range(len(feld)):
         for x in range(len(feld)):
 
@@ -24,7 +25,11 @@ def spielStand(feld, spieler):
                 if feld[y][x].getZuege() != []:
                     uebrigeZuegeSpieler.append(feld[y][x].getZuege())
 
-            elif feld[y][x].isComputer():
+    moeglicheZuege(feld, False)
+    for y in range(len(feld)):
+        for x in range(len(feld)):
+
+            if feld[y][x].isComputer():
                 anzahlComputer += 1
                 if feld[y][x].isDame():
                     anzahlDameComputer += 1
