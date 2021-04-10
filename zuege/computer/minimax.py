@@ -4,10 +4,11 @@ import copy
 
 
 speicherFeld = []
+berechnungstiefe = 6
 
 
 # Minimax
-def minimax(feld, tiefe, spieler):
+def minimax(feld, spieler, tiefe=berechnungstiefe):
 
     if tiefe == 6:
         speicherFeld = copy.deepcopy(feld)
@@ -19,33 +20,19 @@ def minimax(feld, tiefe, spieler):
     if sieger != None:
         return (-99999 if sieger else 99999), None
 
-    if spieler:
-        bestesErgebnis = float('inf')
-        besterZug = None
-        for i, zugAlt in enumerate(zuglisteGenerieren(feld, True)):
-            feldKopie = copy.deepcopy(feld)
-            zugNeu = zuglisteGenerieren(feldKopie,True)[i]
-            ausComp.ziehen(feldKopie, zugNeu, spieler)
-            bewertung = minimax(feldKopie, tiefe-1, False)[0]
-            bestesErgebnis = min(bewertung, bestesErgebnis)
-            if bestesErgebnis == bewertung:
-                besterZug = zugAlt
+    bestesErgebnis = float('inf') if spieler else float('-inf')
+    besterZug = None
+    for i, zugAlt in enumerate(zuglisteGenerieren(feld, spieler)):
+        feldKopie = copy.deepcopy(feld)
+        zugNeu = zuglisteGenerieren(feldKopie, spieler)[i]
+        ausComp.ziehen(feldKopie, zugNeu, spieler)
+        bewertung = minimax(feldKopie, tiefe-1, not spieler)[0]
+        bestesErgebnis = min(bewertung, bestesErgebnis) if spieler \
+            else max(bewertung, bestesErgebnis)
+        if bestesErgebnis == bewertung:
+            besterZug = zugAlt
 
-        return bestesErgebnis, besterZug
-
-    else:
-        bestesErgebnis = float('-inf')
-        besterZug = None
-        for i, zugAlt in enumerate(zuglisteGenerieren(feld, False)):
-            feldKopie = copy.deepcopy(feld)
-            zugNeu = zuglisteGenerieren(feldKopie, False)[i]
-            ausComp.ziehen(feldKopie, zugNeu, spieler)
-            bewertung = minimax(feldKopie, tiefe-1, True)[0]
-            bestesErgebnis = max(bewertung, bestesErgebnis)
-            if bestesErgebnis == bewertung:
-                besterZug = zugAlt
-
-        return bestesErgebnis, besterZug
+    return bestesErgebnis, besterZug
 
 
 # Liste mit möglichen Zuegen generieren

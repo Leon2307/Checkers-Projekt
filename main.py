@@ -70,9 +70,8 @@ class Hauptklasse:
                 else:
                     #evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
                     if not self.bereitsBerechnet:
-                        tiefe = 6
                         besterZug = mm.minimax(
-                            self.feld, tiefe, False)[1]
+                            self.feld, False)[1]
                         self.bereitsBerechnet = True
                         besterZug[3].makeClicked(True)
                         ausfuehren.setLetzteMarkiert(besterZug[3])
