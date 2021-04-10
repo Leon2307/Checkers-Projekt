@@ -4,7 +4,7 @@ import gui.events as evnt
 import zuege.spielstand as zuege
 
 # Funktion zum Zeichnen der Oberfläche
-def drawSeitenleiste(feld, spieler):
+def drawSeitenleiste(feld, spieler, mainObjekt):
     global wiederholt
 
     # Dame-Bild
@@ -36,6 +36,13 @@ def drawSeitenleiste(feld, spieler):
 
         var.gameScreen.blit(bild, (xPos, yPos))
 
+    # Button fuer Minimax
+    minMaxButton = var.miniMaxOn if mainObjekt.getMiniMaxOn() else var.miniMaxOff
+    var.gameScreen.blit(minMaxButton, (var.GAMEWEITE, var.GAMEHOEHE//2.5))
+
+    # Schrift fuer Minimax
+    var.gameScreen.blit(var.miniMaxSchrift, (var.GAMEWEITE + int(var.SEITENWEITE*0.4), var.GAMEHOEHE//2.5))
+
     # Gewinner zeichnen
     if sieger != None and not var.resetting:
         var.wiederholt += 1
@@ -47,7 +54,7 @@ def drawSeitenleiste(feld, spieler):
         var.wiederholt = 0
 
 
-def draw(feld, feldgroesse, spieler):
+def draw(feld, feldgroesse, spieler, mainObjekt):
 
     feldWeite = var.GAMEWEITE // feldgroesse
     feldHoehe = var.GAMEHOEHE // feldgroesse
@@ -96,7 +103,7 @@ def draw(feld, feldgroesse, spieler):
                     # Linie zu Punkten zeichnen
                     linienFarbe = var.GRUEN if feld[y][x].isPlayer() else var.BLAU
                     pygame.draw.lines(var.gameScreen, linienFarbe, False,
-                                      punkteGui, width=10)
+                                      punkteGui, width=var.GAMEWEITE//100)
 
     # Steine und Punkte in Felder zeichnen (oberste Ebene)
     for y in range(feldgroesse):
@@ -122,7 +129,7 @@ def draw(feld, feldgroesse, spieler):
                     var.gameScreen, var.GRAU, (x*feldWeite+feldWeite//2, y*feldHoehe+feldHoehe//2), feldWeite//6)
 
     # Seitenfenster mit Anzeige etc.
-    drawSeitenleiste(feld, spieler)
+    drawSeitenleiste(feld, spieler, mainObjekt)
 
     pygame.display.update()
 

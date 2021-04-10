@@ -1,9 +1,9 @@
 import pygame
 
 GAMEWEITE = 1000
-GAMEHOEHE = 1000
+GAMEHOEHE = GAMEWEITE
 
-SEITENWEITE = 200
+SEITENWEITE = GAMEWEITE // 5
 
 BLACK = (32, 32, 32)
 WHITE = (255, 255, 255)
@@ -12,7 +12,7 @@ BLAU = (114, 186, 207)
 GRUEN = (113, 146, 113)
 
 LINIENFARBE = (235, 171, 52)
-LINIENDICKE = 5
+LINIENDICKE = GAMEWEITE // 200
 
 wiederholt = 0
 
@@ -69,6 +69,20 @@ gruenSieger = pygame.transform.scale(
 blauSieger = pygame.image.load("images/blauGewonnen.png")
 blauSieger = pygame.transform.scale(
     blauSieger, (SEITENWEITE, int(SEITENWEITE*0.3)))
+
+
+# Schalterbild für minimax Computer
+# Minimax On
+miniMaxOn = pygame.image.load("images/minimaxOn.png")
+miniMaxOn = pygame.transform.scale(miniMaxOn, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
+
+#Minimax Off
+miniMaxOff = pygame.image.load("images/minimaxOff.png")
+miniMaxOff = pygame.transform.scale(miniMaxOff, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
+
+# Schrift Minimax Computer
+miniMaxSchrift = pygame.image.load("images/minimaxSchriftComputer.png")
+miniMaxSchrift = pygame.transform.scale(miniMaxSchrift, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
 
 # Fenster initialisieren
 pygame.init()

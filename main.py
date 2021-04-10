@@ -12,6 +12,7 @@ class Hauptklasse:
     SPIELFELDGROESSE = 8
     moegZuege = None
     bereitsBerechnet = False
+    miniMaxOn = False
 
     def __init__(self):
         self.momSpieler = True  # Momentaner Spieler => spieler = True; computer = False
@@ -51,6 +52,13 @@ class Hauptklasse:
     def resetBereitsBerechnet(self):
         self.bereitsBerechnet = False
 
+    # Zwischen Minimax und Manuell wechseln
+    def wechselMiniMaxOn(self):
+        self.miniMaxOn = not self.miniMaxOn
+    
+    def getMiniMaxOn(self):
+        return self.miniMaxOn
+
     # Hauptklasse
     def main(self, h):
         self.feld = self.startFeld()
@@ -66,21 +74,23 @@ class Hauptklasse:
                 if self.momSpieler:
                     evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, True, h)
                 else:
-                    #evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
-                    if not self.bereitsBerechnet:
-                        besterZug = mm.minimax(
-                            self.feld, False)[1]
-                        self.bereitsBerechnet = True
-                        besterZug[3].makeClicked(True)
-                        ausfuehren.setLetzteMarkiert(besterZug[3])
-                        besterZug[0].makeMoeglicherZug(True)
-                        ausfuehren.setLetzteNachbarn([besterZug[0]])
-                        continue
-                    else:
-                        zuege.setzeBestenZug(self.feld, besterZug)
+                    if not self.miniMaxOn:
                         evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
+                    else:
+                        if not self.bereitsBerechnet:
+                            besterZug = mm.minimax(
+                                self.feld, False)[1]
+                            self.bereitsBerechnet = True
+                            besterZug[3].makeClicked(True)
+                            ausfuehren.setLetzteMarkiert(besterZug[3])
+                            besterZug[0].makeMoeglicherZug(True)
+                            ausfuehren.setLetzteNachbarn([besterZug[0]])
+                            continue
+                        else:
+                            zuege.setzeBestenZug(self.feld, besterZug)
+                            evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, False, h)
 
-                draw.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler)
+                draw.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler, h)
 
             # Wenn das Spiel beendet ist
             while gewonnen:
