@@ -3,10 +3,7 @@ import feld
 import gui.events as evnt
 import gui.draw as draw
 import zuege.berechnen as zuege
-import zuege.computer.minimax as mm
-import zuege.computer.ausfuehrenComputer as ausComp
-import copy
-
+import zuege.minimax as mm
 
 class Hauptklasse:
 

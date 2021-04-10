@@ -19,7 +19,6 @@ def setzeBestenZug(feld, einzigerZug):
             feld[y][x].setZuege([])
     
     einzigerZug[3].setZuege([einzigerZug])
-    print("get:",einzigerZug[3].getZuege())
 
 
 def zugzwang(feld, spieler, y, x, eckfelder=None, rausgeworfen=None, durchgang=0):
