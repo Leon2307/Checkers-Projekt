@@ -36,9 +36,18 @@ def checkMinMax(h):
     global minMaxGedrueckt
 
     x, y = pygame.mouse.get_pos()
+    
+    # Checkt ob Minimax Blau gedrückt wurde und schaltet um
     if x > var.GAMEWEITE and x < var.GAMEWEITE + int(var.SEITENWEITE*0.4) \
         and y > var.GAMEHOEHE//2.5 and y < var.GAMEHOEHE//2.5 + int(var.SEITENWEITE*0.15) and not minMaxGedrueckt:
-        h.wechselMiniMaxOn()
+        h.wechselMiniMaxOnBlau()
+        minMaxGedrueckt = True
+        return
+
+    # Checkt ob Minimax Gruen gedrückt wurde und schaltet um
+    elif x > var.GAMEWEITE and x < var.GAMEWEITE + int(var.SEITENWEITE*0.4) \
+        and y > var.GAMEHOEHE//1.3 and y < var.GAMEHOEHE//1.3 + int(var.SEITENWEITE*0.15) and not minMaxGedrueckt:
+        h.wechselMiniMaxOnGruen()
         minMaxGedrueckt = True
         return
 

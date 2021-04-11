@@ -37,11 +37,20 @@ def drawSeitenleiste(feld, spieler, mainObjekt):
         var.gameScreen.blit(bild, (xPos, yPos))
 
     # Button fuer Minimax
-    minMaxButton = var.miniMaxOn if mainObjekt.getMiniMaxOn() else var.miniMaxOff
+    # Blau
+    minMaxButton = var.miniMaxOn if mainObjekt.getMiniMaxOnBlau() else var.miniMaxOff
     var.gameScreen.blit(minMaxButton, (var.GAMEWEITE, var.GAMEHOEHE//2.5))
 
     # Schrift fuer Minimax
-    var.gameScreen.blit(var.miniMaxSchrift, (var.GAMEWEITE + int(var.SEITENWEITE*0.4), var.GAMEHOEHE//2.5))
+    var.gameScreen.blit(var.miniMaxSchriftBlau, (var.GAMEWEITE + int(var.SEITENWEITE*0.4), var.GAMEHOEHE//2.5))
+
+    # Gruen
+    minMaxButton = var.miniMaxOn if mainObjekt.getMiniMaxOnGruen() else var.miniMaxOff
+    var.gameScreen.blit(minMaxButton, (var.GAMEWEITE, var.GAMEHOEHE//1.3))
+
+    # Schrift fuer Minimax
+    var.gameScreen.blit(var.miniMaxSchriftGruen, (var.GAMEWEITE + int(var.SEITENWEITE*0.4), var.GAMEHOEHE//1.3))
+
 
     # Gewinner zeichnen
     if sieger != None and not var.resetting:

@@ -68,7 +68,7 @@ def zuglisteGenerieren(feld, spieler):
 def zugBewerten(neuesFeld, altesFeld, spieler):
 
     # Gewichtung
-    rauswurf = 3
+    rauswurf = 5
     dame = 3
 
     # Spielstand holen
@@ -78,25 +78,26 @@ def zugBewerten(neuesFeld, altesFeld, spieler):
         neuesFeld, spieler)
 
     # Damedifferenz berechnen
-    dameSpielerDiff = (dameSpielerNeu - dameSpielerAlt)*dame
-    dameComputerDiff = (dameComputerNeu - dameComputerAlt)*dame
+    dameSpielerDiff = (dameSpielerNeu - dameSpielerAlt)*dame 
+    dameComputerDiff = (dameComputerNeu - dameComputerAlt)*dame 
 
     dameDiff = dameSpielerDiff - dameComputerDiff if spieler \
         else dameComputerDiff - dameSpielerDiff
 
     # Steinedifferenz berechnen
-    spielerDiff = (anzahlSpielerNeu - anzahlSpielerAlt)*rauswurf
-    computerDiff = (anzahlComputerNeu - anzahlComputerAlt)*rauswurf
+    spielerDiff = (anzahlSpielerNeu - anzahlSpielerAlt)*rauswurf 
+    computerDiff = (anzahlComputerNeu - anzahlComputerAlt)*rauswurf 
 
     steineDiff = spielerDiff - computerDiff if spieler \
         else computerDiff - spielerDiff
 
     # Bewertung ausrechnen und zurueckgeben
     bewertung = dameDiff + steineDiff
-    if gewinnerAlt == None and gewinnerNeu != None:
-        bewertung = float('inf') if not spieler else float('-inf') 
 
-    return bewertung
+    if gewinnerAlt == None and gewinnerNeu != None:
+        bewertung = float('-inf') if spieler else float('inf') 
+
+    return -bewertung if spieler else bewertung
 
 
 # Zug ausfuehren

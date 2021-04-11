@@ -6,9 +6,17 @@ def setLetzteMarkiert(markiert):
     global letzteMarkiert
     letzteMarkiert = markiert
 
+def getLetzteMarkiert():
+    global letzteMarkiert
+    return letzteMarkiert
+
 def setLetzteNachbarn(nachbarn):
     global letzteNachbarn
     letzteNachbarn = nachbarn
+
+def getLetzteNachbarn():
+    global letzteNachbarn
+    return letzteNachbarn
 
 def zugAusfuehren(feld, spieler, y, x, h):
     global letzteMarkiert, letzteNachbarn

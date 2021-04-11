@@ -71,7 +71,7 @@ blauSieger = pygame.transform.scale(
     blauSieger, (SEITENWEITE, int(SEITENWEITE*0.3)))
 
 
-# Schalterbild für minimax Computer
+# Schalterbild für minimax 
 # Minimax On
 miniMaxOn = pygame.image.load("images/minimaxOn.png")
 miniMaxOn = pygame.transform.scale(miniMaxOn, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
@@ -81,8 +81,14 @@ miniMaxOff = pygame.image.load("images/minimaxOff.png")
 miniMaxOff = pygame.transform.scale(miniMaxOff, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
 
 # Schrift Minimax Computer
-miniMaxSchrift = pygame.image.load("images/minimaxSchriftComputer.png")
-miniMaxSchrift = pygame.transform.scale(miniMaxSchrift, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
+miniMaxSchriftBlau = pygame.image.load("images/minimaxSchriftComputer.png")
+miniMaxSchriftBlau = pygame.transform.scale(miniMaxSchriftBlau, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
+
+# Schrift Minimax Spieler
+miniMaxSchriftGruen = pygame.image.load("images/minimaxSchriftSpieler.png")
+miniMaxSchriftGruen = pygame.transform.scale(miniMaxSchriftGruen, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
+
+
 
 # Fenster initialisieren
 pygame.init()
