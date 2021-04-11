@@ -9,13 +9,13 @@ from time import sleep
 class Hauptklasse:
 
     feld = []
-    gewonnen = False
     SPIELFELDGROESSE = 8
     moegZuege = None
     bereitsBerechnet = False
     miniMaxOnBlau = False
     miniMaxOnGruen = False
     besterZug = None
+    startspieler = True
 
     def __init__(self):
         self.momSpieler = True  # Momentaner Spieler => spieler = True; computer = False
@@ -51,7 +51,8 @@ class Hauptklasse:
         self.feld = self.startFeld()
         self.gewonnen = False
         self.bereitsBerechnet = False
-        self.momSpieler = True
+        self.startspieler = not self.startspieler
+        self.momSpieler = self.startspieler
 
     # bereitsBerechnet zuruecksetzen
     def resetBereitsBerechnet(self):
@@ -111,11 +112,12 @@ class Hauptklasse:
                 
                 # Setzt den besten Zug
                 else:
-                    self.besterZug[3].makeClicked(True)
-                    ausfuehren.setLetzteMarkiert(self.besterZug[3])
-                    self.besterZug[0].makeMoeglicherZug(True)
-                    ausfuehren.setLetzteNachbarn([self.besterZug[0]])
-                    zuege.setzeBestenZug(self.feld, self.besterZug)
+                    if self.besterZug != None:
+                        self.besterZug[3].makeClicked(True)
+                        ausfuehren.setLetzteMarkiert(self.besterZug[3])
+                        self.besterZug[0].makeMoeglicherZug(True)
+                        ausfuehren.setLetzteNachbarn([self.besterZug[0]])
+                        zuege.setzeBestenZug(self.feld, self.besterZug)
                     evnt.mausGedrueckt(self.feld, self.SPIELFELDGROESSE, self.momSpieler, h)
 
             draw.draw(self.feld, self.SPIELFELDGROESSE, self.momSpieler, h)

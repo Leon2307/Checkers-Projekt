@@ -57,7 +57,7 @@ def drawSeitenleiste(feld, spieler, mainObjekt):
         var.wiederholt += 1
         if var.wiederholt > 1:
             siegerSpieler = var.gruenSieger if sieger else var.blauSieger
-            var.gameScreen.blit(siegerSpieler, (var.GAMEWEITE, var.GAMEHOEHE//2))
+            var.gameScreen.blit(siegerSpieler, (var.GAMEWEITE, var.GAMEHOEHE//1.8))
 
     else:
         var.wiederholt = 0
