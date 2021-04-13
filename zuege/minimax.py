@@ -5,14 +5,14 @@ import random
 
 
 speicherFeld = []
-berechnungstiefe = 6
+BERECHNUNGSTIEFE = 3
 
 
 # Minimax
-def minimax(feld, spieler, tiefe=berechnungstiefe):
-    global berechnungstiefe, speicherFeld
+def minimax(feld, spieler, tiefe=BERECHNUNGSTIEFE):
+    global BERECHNUNGSTIEFE, speicherFeld
 
-    if tiefe == berechnungstiefe:
+    if tiefe == BERECHNUNGSTIEFE:
         speicherFeld = copy.deepcopy(feld)
 
     if tiefe == 0:
@@ -29,7 +29,7 @@ def minimax(feld, spieler, tiefe=berechnungstiefe):
         feldKopie = copy.deepcopy(feld)
         zugNeu = zuglisteGenerieren(feldKopie, spieler)[i]
         ziehen(feldKopie, zugNeu, spieler)
-        bewertung = minimax(feldKopie, tiefe-1, not spieler)[0]
+        bewertung = minimax(feldKopie, not spieler, tiefe-1)[0]
         bestesErgebnis = min(bewertung, bestesErgebnis) if spieler \
             else max(bewertung, bestesErgebnis)
         if bestesErgebnis == bewertung:
@@ -68,8 +68,8 @@ def zuglisteGenerieren(feld, spieler):
 def zugBewerten(neuesFeld, altesFeld, spieler):
 
     # Gewichtung
-    rauswurf = 5
-    dame = 3
+    rauswurf = 3
+    dame = 1
 
     # Spielstand holen
     gewinnerAlt, anzahlComputerAlt, dameComputerAlt, anzahlSpielerAlt, dameSpielerAlt = spielstand.spielStand(
@@ -79,25 +79,23 @@ def zugBewerten(neuesFeld, altesFeld, spieler):
 
     # Damedifferenz berechnen
     dameSpielerDiff = (dameSpielerNeu - dameSpielerAlt)*dame 
-    dameComputerDiff = (dameComputerNeu - dameComputerAlt)*dame 
+    dameComputerDiff = (dameComputerNeu - dameComputerAlt)*dame
 
-    dameDiff = dameSpielerDiff - dameComputerDiff if spieler \
-        else dameComputerDiff - dameSpielerDiff
+    dameDiff = dameComputerDiff - dameSpielerDiff
 
     # Steinedifferenz berechnen
     spielerDiff = (anzahlSpielerNeu - anzahlSpielerAlt)*rauswurf 
-    computerDiff = (anzahlComputerNeu - anzahlComputerAlt)*rauswurf 
+    computerDiff = (anzahlComputerNeu - anzahlComputerAlt)*rauswurf
 
-    steineDiff = spielerDiff - computerDiff if spieler \
-        else computerDiff - spielerDiff
+    steineDiff = computerDiff - spielerDiff
 
     # Bewertung ausrechnen und zurueckgeben
-    bewertung = dameDiff + steineDiff
+    bewertung =  steineDiff + dameDiff
 
     if gewinnerAlt == None and gewinnerNeu != None:
         bewertung = float('-inf') if spieler else float('inf') 
 
-    return -bewertung if spieler else bewertung
+    return bewertung
 
 
 # Zug ausfuehren
