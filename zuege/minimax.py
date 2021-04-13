@@ -1,7 +1,6 @@
 from zuege import spielstand, berechnen
 from zuege import ausfuehren
 import copy
-import random
 
 
 speicherFeld = []
@@ -71,7 +70,7 @@ def zugBewerten(neuesFeld, altesFeld, spieler):
 
     # Gewichtung
     rauswurf = 3
-    dame = 1
+    dame = 2
 
     # Spielstand holen
     gewinnerAlt, anzahlComputerAlt, dameComputerAlt, anzahlSpielerAlt, dameSpielerAlt = spielstand.spielStand(
