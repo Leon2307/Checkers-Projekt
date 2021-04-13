@@ -5,11 +5,11 @@ import random
 
 
 speicherFeld = []
-BERECHNUNGSTIEFE = 3
+BERECHNUNGSTIEFE = 4
 
 
 # Minimax
-def minimax(feld, spieler, tiefe=BERECHNUNGSTIEFE):
+def minimax(feld, spieler, alpha=float("inf"), beta=float("-inf"), tiefe=BERECHNUNGSTIEFE):
     global BERECHNUNGSTIEFE, speicherFeld
 
     if tiefe == BERECHNUNGSTIEFE:
@@ -23,24 +23,26 @@ def minimax(feld, spieler, tiefe=BERECHNUNGSTIEFE):
         return (float('-inf') if sieger else float('inf')), None
 
     bestesErgebnis = float('inf') if spieler else float('-inf')
-    bestesErgebnisAlt = float('inf') if spieler else float('-inf')
-    besteZuege = []
+    besterZug = None
     for i, zugAlt in enumerate(zuglisteGenerieren(feld, spieler)):
         feldKopie = copy.deepcopy(feld)
         zugNeu = zuglisteGenerieren(feldKopie, spieler)[i]
         ziehen(feldKopie, zugNeu, spieler)
-        bewertung = minimax(feldKopie, not spieler, tiefe-1)[0]
-        bestesErgebnis = min(bewertung, bestesErgebnis) if spieler \
-            else max(bewertung, bestesErgebnis)
-        if bestesErgebnis == bewertung:
-            if bestesErgebnis == bestesErgebnisAlt:
-                besteZuege.append(zugAlt)
-            elif bestesErgebnis > bestesErgebnisAlt and not spieler \
-                or bestesErgebnis < bestesErgebnisAlt and spieler:
-                besteZuege = [zugAlt]
-            bestesErgebnisAlt = bestesErgebnis
+        bewertung = minimax(feldKopie, not spieler, alpha, beta, tiefe-1)[0]
+        if spieler:
+            if bestesErgebnis > bewertung:
+                bestesErgebnis = bewertung
+                besterZug = zugAlt
+                alpha = min(bewertung, alpha)
+        else:
+            if bestesErgebnis < bewertung:
+                bestesErgebnis = bewertung
+                besterZug = zugAlt
+                beta = max(bewertung, beta)
+        if alpha <= beta:
+            break
 
-    return bestesErgebnis, random.choice(besteZuege)
+    return bestesErgebnis, besterZug
 
 
 # Liste mit möglichen Zuegen generieren
