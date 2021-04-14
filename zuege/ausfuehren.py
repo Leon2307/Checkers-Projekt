@@ -49,6 +49,11 @@ def zugAusfuehren(feld, spieler, y, x, h):
     # Ist Geklicktes Feld Nachbar?
     elif feld[y][x].isMoeglicherZug():
 
+        # Funktionen in der Main aufrufen
+        h.resetBereitsBerechnet()
+        h.wechselSpieler()
+        h.addZugZurueck()
+
         # Das zuletzt markierte Feld leeren
         letzteMarkiert.makePlayer(False)
         letzteMarkiert.makeComputer(False)
@@ -71,8 +76,6 @@ def zugAusfuehren(feld, spieler, y, x, h):
                 nachbarIndex = i
             n.makeMoeglicherZug(False)
             i += 1
-        h.resetBereitsBerechnet()
-        h.wechselSpieler()
 
         # rauswerfen
         if letzteMarkiert.getZuege()[nachbarIndex][1] != None:

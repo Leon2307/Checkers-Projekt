@@ -51,6 +51,8 @@ def drawSeitenleiste(feld, spieler, mainObjekt):
     # Schrift fuer Minimax
     var.gameScreen.blit(var.miniMaxSchriftGruen, (var.GAMEWEITE + int(var.SEITENWEITE*0.4), var.GAMEHOEHE//1.3))
 
+    # Zug zurück Button
+    var.gameScreen.blit(var.zurueckButton, (var.GAMEWEITE + int(var.SEITENWEITE*0.4), var.GAMEHOEHE//1.45))
 
     # Gewinner zeichnen
     if sieger != None and not var.resetting:
@@ -58,7 +60,6 @@ def drawSeitenleiste(feld, spieler, mainObjekt):
         if var.wiederholt > 1:
             siegerSpieler = var.gruenSieger if sieger else var.blauSieger
             var.gameScreen.blit(siegerSpieler, (var.GAMEWEITE, var.GAMEHOEHE//1.8))
-
     else:
         var.wiederholt = 0
 

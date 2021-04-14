@@ -4,7 +4,8 @@ import gui.events as evnt
 import gui.draw as draw
 import zuege.berechnen as zuege
 import zuege.minimax as mm
-from time import sleep
+import copy
+
 
 class Hauptklasse:
 
@@ -16,6 +17,7 @@ class Hauptklasse:
     miniMaxOnGruen = False
     besterZug = None
     startspieler = True
+    vorherigeZuege = []
 
     def __init__(self):
         self.momSpieler = True  # Momentaner Spieler => spieler = True; computer = False
@@ -42,6 +44,23 @@ class Hauptklasse:
 
         return spielfeld
 
+    # Zug zurück gehen
+    def zugZurueck(self):
+        if self.vorherigeZuege != []:
+            self.feld = self.vorherigeZuege[-1]
+            self.vorherigeZuege.pop()
+            self.momSpieler = not self.momSpieler
+            self.bereitsBerechnet = False
+    
+    # Zug zu vorherigen Zügen hinzufügen
+    def addZugZurueck(self):
+        altesFeld = copy.deepcopy(self.feld)
+        for y in range(self.SPIELFELDGROESSE):
+            for x in range(self.SPIELFELDGROESSE):
+                altesFeld[y][x].makeClicked(False)
+                altesFeld[y][x].makeMoeglicherZug(False)
+        self.vorherigeZuege.append(altesFeld)
+
     # aktuellen Spieler wechseln
     def wechselSpieler(self):
         self.momSpieler = not self.momSpieler
@@ -53,6 +72,7 @@ class Hauptklasse:
         self.bereitsBerechnet = False
         self.startspieler = not self.startspieler
         self.momSpieler = self.startspieler
+        self.vorherigeZuege = []
 
     # bereitsBerechnet zuruecksetzen
     def resetBereitsBerechnet(self):

@@ -17,11 +17,12 @@ def mausGedrueckt(feld, feldgroesse, spieler, h):
         zuege.zugAusfuehren(feld, spieler, y, x, h)
         checkReset(h)
         checkMinMax(h)
+        checkZugZurueck(h)
     else:
         bereitsGedrueckt = False
 
 
-# Checken ob das Feld durch klicken auf die Krone zurueckgesetzt wurde
+# Checken ob das Feld durch klicken auf die Krone zurueckgesetzt wurde 
 def checkReset(h):
     global bereitsGedrueckt
 
@@ -30,6 +31,17 @@ def checkReset(h):
             and y > 0 and y < var.SEITENWEITE and not bereitsGedrueckt:
         var.resetting = True
         h.resetFeld()
+        bereitsGedrueckt = True
+
+
+# Checken ob ein Zug durch klicken des zurück Buttons zurück gegangen wird
+def checkZugZurueck(h):
+    global bereitsGedrueckt
+
+    x, y = pygame.mouse.get_pos()
+    if x > var.GAMEWEITE+var.SEITENWEITE//3 and x < var.GAMEWEITE + var.SEITENWEITE - var.SEITENWEITE//3 \
+            and y > var.GAMEHOEHE//1.45 and y < var.GAMEHOEHE//1.45 + int(var.SEITENWEITE*0.15) and not bereitsGedrueckt:
+        h.zugZurueck()
         bereitsGedrueckt = True
 
 

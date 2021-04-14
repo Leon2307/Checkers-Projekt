@@ -89,6 +89,9 @@ miniMaxSchriftGruen = pygame.image.load("images/minimaxSchriftSpieler.png")
 miniMaxSchriftGruen = pygame.transform.scale(miniMaxSchriftGruen, (int(SEITENWEITE*0.4), int(SEITENWEITE*0.15)))
 
 
+# Zug zurück Button 
+zurueckButton = pygame.image.load("images/zurueckIcon.png")
+zurueckButton = pygame.transform.scale(zurueckButton, (int(SEITENWEITE*0.15), int(SEITENWEITE*0.15)))
 
 # Fenster initialisieren
 pygame.init()
