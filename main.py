@@ -128,6 +128,7 @@ class Hauptklasse:
                     self.besterZug = mm.minimax(
                         self.feld, self.momSpieler)[1]
                     self.bereitsBerechnet = True
+                    print("bester:", self.besterZug)
                     continue
                 
                 # Setzt den besten Zug

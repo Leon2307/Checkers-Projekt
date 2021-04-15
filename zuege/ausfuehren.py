@@ -85,6 +85,9 @@ def zugAusfuehren(feld, spieler, y, x, h):
                     letzteZuege.makeComputer(False)
                     letzteZuege.makeDame(False)
 
+        # moegliche Zuege leeren
+        letzteMarkiert.setZuege([])
+
         letzteMarkiert = None
         letzteNachbarn = []
 

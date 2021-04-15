@@ -39,6 +39,9 @@ def minimax(feld, spieler, alpha=float("inf"), beta=float("-inf"), tiefe=BERECHN
                 besterZug = zugAlt
                 beta = max(bewertung, beta)
         if alpha <= beta:
+            if besterZug == None:
+                print("alt")
+                besterZug = zugAlt
             break
 
     return bestesErgebnis, besterZug
