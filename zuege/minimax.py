@@ -22,7 +22,7 @@ def minimax(feld, spieler, alpha=float("inf"), beta=float("-inf"), tiefe=BERECHN
 
     sieger = spielStand(feld, spieler)[0]
     if sieger != None:
-        return (float('-inf') if sieger else float('inf')), None
+        return (-9999 if sieger else 9999), None
 
     bestesErgebnis = float('inf') if spieler else float('-inf')
     besterZug = None
@@ -49,8 +49,6 @@ def minimax(feld, spieler, alpha=float("inf"), beta=float("-inf"), tiefe=BERECHN
 
         # unterbricht die Schleife, falls kein besserer Wert mehr erwartet wird
         if alpha <= beta:
-            if besterZug == None:
-                besterZug = zugAlt
             break
 
     return bestesErgebnis, besterZug
@@ -104,11 +102,11 @@ def zugBewerten(neuesFeld, altesFeld, spieler):
     steineDiff = computerDiff - spielerDiff
 
     # Bewertung ausrechnen und zurueckgeben
-    bewertung = steineDiff + dameDiff
+    bewertung = steineDiff
 
     # Wenn ein Spieler gewonnen hat unendlich zurueckgeben
     if gewinnerAlt == None and gewinnerNeu != None:
-        bewertung = float('-inf') if spieler else float('inf')
+        bewertung = -9999 if gewinnerNeu else 9999
 
     return bewertung
 
