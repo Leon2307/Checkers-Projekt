@@ -46,7 +46,6 @@ class Feld:
         return self.moeglicherZug
 
     # Methoden zum setzen eines Status
-
     def makeWhite(self, bool):
         self.white = bool
 
@@ -79,6 +78,7 @@ class Feld:
 
             for pos in self.moeglicheZuege[index][2]:
                 punkte.append(pos.getPosition())
+
             punkte.append(self.moeglicheZuege[index][0].getPosition())
 
             return punkte
@@ -96,7 +96,7 @@ class Feld:
     def setZuege(self, zuege):
         self.moeglicheZuege = zuege
 
-    # Mögliche Zuege berechnen
+    # Moegliche Zuege berechnen
     def zuegeBerechnen(self, feld, player, y, x):
 
         self.moeglicheZuege = []

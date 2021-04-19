@@ -6,6 +6,8 @@ import sys
 bereitsGedrueckt = False
 
 # Checkt ob die Maus gedrueckt wurde
+
+
 def mausGedrueckt(feld, feldgroesse, spieler, h):
     global bereitsGedrueckt
 
@@ -22,7 +24,7 @@ def mausGedrueckt(feld, feldgroesse, spieler, h):
         bereitsGedrueckt = False
 
 
-# Checken ob das Feld durch klicken auf die Krone zurueckgesetzt wurde 
+# Checken ob das Feld durch klicken auf die Krone zurueckgesetzt wurde
 def checkReset(h):
     global bereitsGedrueckt
 
@@ -34,7 +36,7 @@ def checkReset(h):
         bereitsGedrueckt = True
 
 
-# Checken ob ein Zug durch klicken des zurück Buttons zurück gegangen wird
+# Checken ob ein Zug durch klicken des zurueck Buttons zurueck gegangen wird
 def checkZugZurueck(h):
     global bereitsGedrueckt
 
@@ -45,22 +47,22 @@ def checkZugZurueck(h):
         bereitsGedrueckt = True
 
 
-# Checkt ob der Minimaxknopf gedrückt wurde
+# Checkt ob der Minimaxknopf gedrueckt wurde
 def checkMinMax(h):
     global bereitsGedrueckt
 
     x, y = pygame.mouse.get_pos()
-    
-    # Checkt ob Minimax Blau gedrückt wurde und schaltet um
+
+    # Checkt ob Minimax Blau gedrueckt wurde und schaltet um
     if x > var.GAMEWEITE and x < var.GAMEWEITE + int(var.SEITENWEITE*0.4) \
-        and y > var.GAMEHOEHE//2.5 and y < var.GAMEHOEHE//2.5 + int(var.SEITENWEITE*0.15) and not bereitsGedrueckt:
+            and y > var.GAMEHOEHE//2.5 and y < var.GAMEHOEHE//2.5 + int(var.SEITENWEITE*0.15) and not bereitsGedrueckt:
         h.wechselMiniMaxOnBlau()
         bereitsGedrueckt = True
         return
 
-    # Checkt ob Minimax Gruen gedrückt wurde und schaltet um
+    # Checkt ob Minimax Gruen gedrueckt wurde und schaltet um
     elif x > var.GAMEWEITE and x < var.GAMEWEITE + int(var.SEITENWEITE*0.4) \
-        and y > var.GAMEHOEHE//1.3 and y < var.GAMEHOEHE//1.3 + int(var.SEITENWEITE*0.15) and not bereitsGedrueckt:
+            and y > var.GAMEHOEHE//1.3 and y < var.GAMEHOEHE//1.3 + int(var.SEITENWEITE*0.15) and not bereitsGedrueckt:
         h.wechselMiniMaxOnGruen()
         bereitsGedrueckt = True
         return

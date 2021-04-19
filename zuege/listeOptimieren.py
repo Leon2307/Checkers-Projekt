@@ -2,7 +2,8 @@
 anfangsX = 0
 anfangsY = 0
 
-# Lösche Item von Liste
+
+# Loesche Item von Liste
 def deleteFromList(list, item):
 
     for index, i in enumerate(list):
@@ -31,7 +32,7 @@ def pickeBeste(zuege):
     return zuege
 
 
-# Checkt ob Der nächste Zug auf ein mögliches/neues Feld geht
+# Checkt ob Der nächste Zug auf ein moegliches/neues Feld geht
 def bereitsWeg(neuesY, neuesX, eckfelder, zwangzuege):
 
     # Checkt ob Startfeld

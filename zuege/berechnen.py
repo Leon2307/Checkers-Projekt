@@ -6,21 +6,24 @@ dZuegeComputer = [[1, -1], [1, 1]]
 dZuegeDame = [[-1, 1], [-1, -1], [1, -1], [1, 1]]
 zwangZuege = []
 
-# Berechnet fuer jedes Feld die möglichen Zuege
+
+# Berechnet fuer jedes Feld die moeglichen Zuege
 def moeglicheZuege(feld, spieler):
     for y in range(len(feld)):
         for x in range(len(feld)):
             feld[y][x].zuegeBerechnen(feld, spieler, y, x)
 
-# Nur den einen möglichen Zug des Computers anzeigen
+
+# Nur den einen moeglichen Zug des Computers anzeigen
 def setzeBestenZug(feld, einzigerZug):
     for y in range(len(feld)):
         for x in range(len(feld)):
             feld[y][x].setZuege([])
-    
+
     einzigerZug[3].setZuege([einzigerZug])
 
 
+# Berechnet die Zuege fuer das angegebene Feld(normale Steine)
 def zugzwang(feld, spieler, y, x, eckfelder=None, rausgeworfen=None, durchgang=0):
     global zwangZuege, anfangsX, anfangsY
 
@@ -39,7 +42,7 @@ def zugzwang(feld, spieler, y, x, eckfelder=None, rausgeworfen=None, durchgang=0
     zuegeMoeglich = False
     moeglich = False
 
-    # Alle Möglichkeiten durchgehen
+    # Alle Moeglichkeiten durchgehen
     for j, i in deltaZuege:
         j2 = j*2
         i2 = i*2
@@ -92,6 +95,7 @@ def zugzwang(feld, spieler, y, x, eckfelder=None, rausgeworfen=None, durchgang=0
         return zuegeMoeglich
 
 
+# Berechnet die Zuege fuer das angegebene Feld(Damen)
 def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuegeDameHergekommen):
     global zwangZuege, anfangsX, anfangsY, dZuegeDame, dZuegeDame2
 
@@ -115,7 +119,7 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuege
     zuegeMoeglich = False
     moeglich = False
 
-    # Alle Möglichkeiten durchgehen
+    # Alle Moeglichkeiten durchgehen
     for j, i in dZuegeDameNeu:
 
         speicherJ = j
@@ -148,7 +152,7 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuege
                     rausgeworfen.append(feld[y+j][x+i])
                     eckfelder.append(feld[y][x])
 
-                    # Wenn die neue Position nicht möglich ist, da bereits abgegangen
+                    # Wenn die neue Position nicht moeglich ist, da bereits abgegangen
                     if optm.bereitsWeg(y+j+speicherJ, x+i+speicherI, eckfelder, zwangZuege):
                         moeglich = zugzwangDame(y+j+speicherJ, x+i+speicherI, spieler, feld,
                                                 eckfelder, rausgeworfen, durchgang+1, [-speicherJ, -speicherI])
@@ -165,7 +169,7 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuege
 
                 break
 
-            # j und i erhöhen
+            # j und i erhoehen
             j = j+speicherJ
             i = i+speicherI
 
@@ -173,3 +177,53 @@ def zugzwangDame(y, x, spieler, feld, eckfelder, rausgeworfen, durchgang, dZuege
         return optm.pickeBeste(zwangZuege)
     else:
         return zuegeMoeglich
+
+
+# ueberprueft wie viele Steine noch drin sind und ob gewonnen wurde
+def spielStand(feld, spieler):
+
+    # verbliebene Steine auf dem Spielfeld
+    anzahlSpieler = 0
+    anzahlDameSpieler = 0
+    anzahlComputer = 0
+    anzahlDameComputer = 0
+
+    # verbliebene Zuege auf dem Spielfeld
+    uebrigeZuegeSpieler = []
+    uebrigeZuegeComputer = []
+
+    moeglicheZuege(feld, True)
+    for y in range(len(feld)):
+        for x in range(len(feld)):
+
+            # Anzahl checken
+            if feld[y][x].isPlayer():
+                anzahlSpieler += 1
+                if feld[y][x].isDame():
+                    anzahlDameSpieler += 1
+                if feld[y][x].getZuege() != []:
+                    uebrigeZuegeSpieler.append(feld[y][x].getZuege())
+
+    moeglicheZuege(feld, False)
+    for y in range(len(feld)):
+        for x in range(len(feld)):
+
+            if feld[y][x].isComputer():
+                anzahlComputer += 1
+                if feld[y][x].isDame():
+                    anzahlDameComputer += 1
+                if feld[y][x].getZuege() != []:
+                    uebrigeZuegeComputer.append(feld[y][x].getZuege())
+
+    # return Sieger, computerSteine, spielerSteine
+    # Spieler hat gewonnen
+    if uebrigeZuegeComputer == [] and not spieler or anzahlComputer < 1:
+        return True, anzahlComputer, anzahlDameComputer, anzahlSpieler, anzahlDameSpieler
+
+    # Computer hat gewonnen
+    elif uebrigeZuegeSpieler == [] and spieler or anzahlSpieler < 1:
+        return False, anzahlComputer, anzahlDameComputer, anzahlSpieler, anzahlDameSpieler
+
+    # Keiner hat gewonnen
+    else:
+        return None, anzahlComputer, anzahlDameComputer, anzahlSpieler, anzahlDameSpieler

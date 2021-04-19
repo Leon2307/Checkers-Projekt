@@ -2,21 +2,27 @@
 letzteMarkiert = None
 letzteNachbarn = []
 
+
+# Getter und Setter
 def setLetzteMarkiert(markiert):
     global letzteMarkiert
     letzteMarkiert = markiert
+
 
 def getLetzteMarkiert():
     global letzteMarkiert
     return letzteMarkiert
 
+
 def setLetzteNachbarn(nachbarn):
     global letzteNachbarn
     letzteNachbarn = nachbarn
 
+
 def getLetzteNachbarn():
     global letzteNachbarn
     return letzteNachbarn
+
 
 def zugAusfuehren(feld, spieler, y, x, h):
     global letzteMarkiert, letzteNachbarn
@@ -40,7 +46,7 @@ def zugAusfuehren(feld, spieler, y, x, h):
         letzteMarkiert = feld[y][x]
         feld[y][x].makeClicked(True)
 
-        # mögliche Zuege markieren
+        # moegliche Zuege markieren
         for zug in feld[y][x].getZuege():
 
             zug[0].makeMoeglicherZug(True)

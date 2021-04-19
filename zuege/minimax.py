@@ -1,4 +1,5 @@
-from zuege import spielstand, berechnen
+from zuege import berechnen
+from zuege.berechnen import spielStand
 from zuege import ausfuehren
 import copy
 
@@ -11,23 +12,30 @@ BERECHNUNGSTIEFE = 4
 def minimax(feld, spieler, alpha=float("inf"), beta=float("-inf"), tiefe=BERECHNUNGSTIEFE):
     global BERECHNUNGSTIEFE, speicherFeld
 
+    # Im ersten Durchlauf das Spielfeld speichern
     if tiefe == BERECHNUNGSTIEFE:
         speicherFeld = copy.deepcopy(feld)
 
+    # Abbruchbedingungen
     if tiefe == 0:
         return zugBewerten(feld, speicherFeld, spieler), None
 
-    sieger = spielstand.spielStand(feld, spieler)[0]
+    sieger = spielStand(feld, spieler)[0]
     if sieger != None:
         return (float('-inf') if sieger else float('inf')), None
 
     bestesErgebnis = float('inf') if spieler else float('-inf')
     besterZug = None
+
+    # Alle moeglichen Zuege ausprobieren
     for i, zugAlt in enumerate(zuglisteGenerieren(feld, spieler)):
+
         feldKopie = copy.deepcopy(feld)
         zugNeu = zuglisteGenerieren(feldKopie, spieler)[i]
-        ziehen(feldKopie, zugNeu, spieler)
+        virtuellZiehen(feldKopie, zugNeu, spieler)
         bewertung = minimax(feldKopie, not spieler, alpha, beta, tiefe-1)[0]
+
+        # Ergebnis des aktuellen Zuges mit bestem vorherigen vergleichen
         if spieler:
             if bestesErgebnis > bewertung:
                 bestesErgebnis = bewertung
@@ -38,22 +46,24 @@ def minimax(feld, spieler, alpha=float("inf"), beta=float("-inf"), tiefe=BERECHN
                 bestesErgebnis = bewertung
                 besterZug = zugAlt
                 beta = max(bewertung, beta)
+
+        # unterbricht die Schleife, falls kein besserer Wert mehr erwartet wird
         if alpha <= beta:
             if besterZug == None:
-                print("alt")
                 besterZug = zugAlt
             break
 
     return bestesErgebnis, besterZug
 
 
-# Liste mit möglichen Zuegen generieren
+# Liste mit moeglichen Zuegen generieren
 def zuglisteGenerieren(feld, spieler):
 
     berechnen.moeglicheZuege(feld, spieler)
 
     alleZuege = []
 
+    # Geht durch alle Felder des aktuellen Spielers und fuegt die Zuege zur Liste hinzu
     for y in range(len(feld)):
         for x in range(len(feld)):
 
@@ -76,34 +86,35 @@ def zugBewerten(neuesFeld, altesFeld, spieler):
     dame = 2
 
     # Spielstand holen
-    gewinnerAlt, anzahlComputerAlt, dameComputerAlt, anzahlSpielerAlt, dameSpielerAlt = spielstand.spielStand(
+    gewinnerAlt, anzahlComputerAlt, dameComputerAlt, anzahlSpielerAlt, dameSpielerAlt = spielStand(
         altesFeld, spieler)
-    gewinnerNeu, anzahlComputerNeu, dameComputerNeu, anzahlSpielerNeu, dameSpielerNeu = spielstand.spielStand(
+    gewinnerNeu, anzahlComputerNeu, dameComputerNeu, anzahlSpielerNeu, dameSpielerNeu = spielStand(
         neuesFeld, spieler)
 
     # Damedifferenz berechnen
-    dameSpielerDiff = (dameSpielerNeu - dameSpielerAlt)*dame 
+    dameSpielerDiff = (dameSpielerNeu - dameSpielerAlt)*dame
     dameComputerDiff = (dameComputerNeu - dameComputerAlt)*dame
 
     dameDiff = dameComputerDiff - dameSpielerDiff
 
     # Steinedifferenz berechnen
-    spielerDiff = (anzahlSpielerNeu - anzahlSpielerAlt)*rauswurf 
+    spielerDiff = (anzahlSpielerNeu - anzahlSpielerAlt)*rauswurf
     computerDiff = (anzahlComputerNeu - anzahlComputerAlt)*rauswurf
 
     steineDiff = computerDiff - spielerDiff
 
     # Bewertung ausrechnen und zurueckgeben
-    bewertung =  steineDiff + dameDiff
+    bewertung = steineDiff + dameDiff
 
+    # Wenn ein Spieler gewonnen hat unendlich zurueckgeben
     if gewinnerAlt == None and gewinnerNeu != None:
-        bewertung = float('-inf') if spieler else float('inf') 
+        bewertung = float('-inf') if spieler else float('inf')
 
     return bewertung
 
 
 # Zug ausfuehren
-def ziehen(feld, zug, spieler):
+def virtuellZiehen(feld, zug, spieler):
 
     # Das Startfeld leeren
     zug[3].makePlayer(False)
@@ -123,6 +134,7 @@ def ziehen(feld, zug, spieler):
     # rauswerfen
     if zug[1] != (None, None):
         for letzteZuege in zug[1]:
+
             if letzteZuege != None:
                 letzteZuege.makePlayer(False)
                 letzteZuege.makeComputer(False)
