@@ -93,14 +93,14 @@ def draw(feld, feldgroesse, spieler, mainObjekt):
             if len(feld[y][x].getZuege()) > 0:
 
                 # Rechteck um Feld zeichnen
-                pygame.draw.line(var.gameScreen, var.LINIENFARBE, (x*feldWeite+var.LINIENDICKE//2, y*feldHoehe+var.LINIENDICKE//2),
-                                 (x*feldWeite+feldWeite-var.LINIENDICKE//2, y*feldHoehe+var.LINIENDICKE//2), var.LINIENDICKE)
+                pygame.draw.line(var.gameScreen, var.LINIENFARBE, (x*feldWeite, y*feldHoehe),
+                                 (x*feldWeite+feldWeite-var.LINIENDICKE//2, y*feldHoehe), var.LINIENDICKE)
                 pygame.draw.line(var.gameScreen, var.LINIENFARBE, (x*feldWeite+feldWeite-var.LINIENDICKE//2, y*feldHoehe),
-                                 (x*feldWeite+feldWeite-var.LINIENDICKE//2, y*feldHoehe+feldHoehe+var.LINIENDICKE//2), var.LINIENDICKE)
-                pygame.draw.line(var.gameScreen, var.LINIENFARBE, (x*feldWeite+var.LINIENDICKE//2, y*feldHoehe+feldHoehe-var.LINIENDICKE//2),
+                                 (x*feldWeite+feldWeite-var.LINIENDICKE//2, y*feldHoehe+feldHoehe), var.LINIENDICKE)
+                pygame.draw.line(var.gameScreen, var.LINIENFARBE, (x*feldWeite, y*feldHoehe+feldHoehe-var.LINIENDICKE//2),
                                  (x*feldWeite+feldWeite-var.LINIENDICKE//2, y*feldHoehe+feldHoehe-var.LINIENDICKE//2), var.LINIENDICKE)
-                pygame.draw.line(var.gameScreen, var.LINIENFARBE, (x*feldWeite+var.LINIENDICKE//2, y*feldHoehe),
-                                 (x*feldWeite+var.LINIENDICKE//2, y*feldHoehe+feldHoehe+var.LINIENDICKE//2), var.LINIENDICKE)
+                pygame.draw.line(var.gameScreen, var.LINIENFARBE, (x*feldWeite, y*feldHoehe),
+                                 (x*feldWeite, y*feldHoehe+feldHoehe), var.LINIENDICKE)
 
     # Linie zu Ziel zeichnen (mittlere Ebene)
     for y in range(feldgroesse):

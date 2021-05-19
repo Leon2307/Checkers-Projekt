@@ -101,22 +101,7 @@ class Feld:
 
         self.moeglicheZuege = []
 
-        if self.isPlayer() and player:
-
-            # Fuer normale Steine
-            if not self.isDame():
-
-                moegZuege = zuege.zugzwang(feld, player, y, x)
-                self.moeglicheZuege = moegZuege
-
-            # Fuer Dame
-            elif self.isDame():
-
-                moegZuege = zuege.zugzwangDame(
-                    y, x, player, feld, None, None, 0, None)
-                self.moeglicheZuege = moegZuege
-
-        elif self.isComputer() and not player:
+        if self.isPlayer() and player or self.isComputer() and not player:
 
             # Fuer normale Steine
             if not self.isDame():

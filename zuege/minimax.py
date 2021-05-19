@@ -81,7 +81,7 @@ def zugBewerten(neuesFeld, altesFeld, spieler):
 
     # Gewichtung
     rauswurf = 3
-    dame = 2
+    dame = 4
 
     # Spielstand holen
     gewinnerAlt, anzahlComputerAlt, dameComputerAlt, anzahlSpielerAlt, dameSpielerAlt = spielStand(

@@ -151,8 +151,6 @@ class Hauptklasse:
                 if not self.bereitsBerechnet:
                     self.besteBewertung, self.besterZug = mm.minimax(
                         self.feld, self.momSpieler)
-                    print(self.momSpieler, self.besteBewertung)
-                    print(self.besterZug)
                     self.bereitsBerechnet = True
                     continue
 
