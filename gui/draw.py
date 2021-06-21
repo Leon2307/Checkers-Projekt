@@ -155,4 +155,4 @@ def draw(feld, feldgroesse, spieler, mainObjekt):
 
     pygame.display.update()
 
-    evnt.events(feldgroesse, feld)
+    evnt.checkAbbruch(feldgroesse, feld)

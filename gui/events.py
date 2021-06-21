@@ -69,7 +69,7 @@ def checkMinMax(h):
 
 
 # Kontrolliert Abbruchbedingung (schließen des Fensters)
-def events(feldgroesse, feld):
+def checkAbbruch(feldgroesse, feld):
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

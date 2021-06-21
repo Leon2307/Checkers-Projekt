@@ -56,6 +56,8 @@ class Hauptklasse:
             self.vorherigeZuege.pop()
             self.momSpieler = not self.momSpieler
             self.bereitsBerechnet = False
+            self.miniMaxOnBlau = False
+            self.miniMaxOnGruen = False
 
     # Zug zu vorherigen Zuegen hinzufuegen
     def addZugZurueck(self):
